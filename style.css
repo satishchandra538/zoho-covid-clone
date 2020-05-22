@@ -1,0 +1,139 @@
+:root {
+    --primary-color: rgb(20, 31, 66);
+    --secondary-color: rgb(28, 41, 87);
+    --border-color: rgb(69, 82, 129);
+    --hover-color: rgb(132, 143, 182);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: var(--primary-color);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.header {
+    font-size: 30px;
+    margin: 0 auto;
+    text-align: center;
+    background-color: var(--secondary-color);
+    padding: 0 10px;
+    width: 100%;
+}
+
+.country-selection {
+    padding-left: 10px;
+}
+
+.country-selection label {
+    color: rgb(4, 184, 4)
+}
+
+.country-selection select {
+    outline: none;
+    background-color: var(--secondary-color);
+    color: white;
+    border: 1px solid var(--border-color);
+    width: 10rem;
+    height: 1.5rem;
+    border-radius: 0.2rem;
+}
+
+.country-selection select option {
+    font-size: 0.9rem;
+}
+
+.reset-button {
+    outline: none;
+    border: 1px solid var(--border-color);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+    background-color: var(--secondary-color);
+    margin-left: 15px;
+    height: 1.5rem;
+    border-radius: 0.2rem;
+}
+
+.reset-button:hover {
+    border: 1px solid white;
+}
+
+.confirmed {
+    color: red;
+    font-weight: 600;
+}
+
+.active {
+    color: orange;
+    font-weight: 600;
+}
+
+.critical {
+    color: yellow;
+    font-weight: 600;
+}
+
+.recover {
+    color: greenyellow;
+    font-weight: 600;
+}
+
+.death {
+    color: rgb(155, 141, 141);
+    font-weight: 600;
+}
+
+/* Total ShowCase Data Style */
+.top-data-show {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.total-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-self: center;
+    font-size: 0.9rem;
+    border-radius: 0.6rem;
+    border: 1px solid var(--border-color);
+    padding: 0.3rem;
+    margin-right: 1px;
+    background-color: var(--secondary-color);
+}
+
+.total-data .change {
+    font-size: 0.6rem;
+}
+
+/* world map data */
+.world-data-showcase {
+    margin-top: 1rem;
+}
+
+.world-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.6rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.3rem;
+    background-color: var(--secondary-color);
+    margin-right: 1px;
+    text-align: center;
+}
+
+#world-map {
+    width: calc(50vw - 2px);
+}
+
+#worldActivePieChart {
+    width: calc(30vw - 2px);
+}
+
+#topCountry {
+    width: calc(20vw - 2px);
+}
