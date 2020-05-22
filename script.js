@@ -58,5 +58,35 @@ const fetchData = async () => {
     highestCountryNameInDoc[1].children[2].innerHTML = countries[0][1][days - 1].deaths;
     highestCountryNameInDoc[2].children[2].innerHTML = countries[0][1][days - 1].recovered;
 
+    //Adding Donut char for whole wold data
+
+    var pie = d3.pie();
+    var worldActivePieChart = d3.select("#worldActivePieChart")
+    .attr('width',window.innerWidth*.3)
+
+    var pieChartWidth = window.innerWidth * .3;
+
+    console.log(worldActivePieChart._groups[0][0].clientWidth,pieChartWidth)
+
+    var g = worldActivePieChart.append('g')
+        .attr('transform', `translate(${pieChartWidth / 2},${pieChartWidth / 2})`)
+    var color = d3.scaleOrdinal(['#ababab', '#4ce15d', '#fd3056']);
+    var arc = d3.arc()
+        .innerRadius(pieChartWidth / 2-60)
+        .outerRadius(pieChartWidth/2 - 10)
+    var arcs = g.selectAll('arc')
+        .data(pie([totalRecovered, totalActive, totalDeath]))
+        .enter()
+        .append('g')
+        .on('mouseover', (d) => {
+            console.log(d);
+        });
+
+    arcs.append('path')
+        .attr("fill", function (d, i) {
+            return color(i);
+        })
+        .attr("d", arc)
+        
 }
 fetchData()

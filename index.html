@@ -9,6 +9,8 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="./style.css">
+    <script src="//d3js.org/d3.v5.min.js"></script>
+    <script src="//d3js.org/topojson.v1.min.js"></script>
 </head>
 
 <body>
@@ -73,8 +75,8 @@
 
         <!-- World map and Pie-Chart Show -->
         <div class="row world-data-showcase">
-            <div class="world-data" id="world-map"><span>Confirmed Cases By Country</span></div>
-            <div id="worldActivePieChart" class="world-data">Overall Active Cases
+            <div class="world-data" id="world-map"><span style="font-size: 12px;">Confirmed Cases By Country</span></div>
+            <div class="world-data" style="font-size: 12px;">Overall Active Cases <svg id="worldActivePieChart"></svg>
             </div>
             <div id="topCountry">
                 <div id="topCountryConfirmed" class="world-data">

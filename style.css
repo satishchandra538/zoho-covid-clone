@@ -90,6 +90,7 @@ body {
 .top-data-show {
     display: flex;
     justify-content: space-evenly;
+    transition: all 0.8s;
 }
 
 .total-data {
@@ -136,4 +137,9 @@ body {
 
 #topCountry {
     width: calc(20vw - 2px);
+}
+svg {
+    width: 50vw;
+    height: 500px;
+    margin: 0px auto;
 }
