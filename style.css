@@ -123,23 +123,5 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 0.3rem;
     background-color: var(--secondary-color);
-    margin-right: 1px;
     text-align: center;
-}
-
-#world-map {
-    width: calc(50vw - 2px);
-}
-
-#worldActivePieChart {
-    width: calc(30vw - 2px);
-}
-
-#topCountry {
-    width: calc(20vw - 2px);
-}
-svg {
-    width: 50vw;
-    height: 500px;
-    margin: 0px auto;
 }

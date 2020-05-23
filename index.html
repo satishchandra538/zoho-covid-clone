@@ -38,23 +38,11 @@
                 <span class="change">Change From yesterday: <span id="totalConfirmedChange">6576</span></span>
             </div>
 
-            <!-- <div class="total-data">
-                <span>Active Cases</span>
-                <span id="totalActive" class="active"></span>
-                <span class="change">Change From yesterday: <span id="totalActiveChange">576</span></span>
-            </div> -->
-
             <div class="total-data">
                 <span>Deaths</span>
                 <span id="totalDeaths" class="death"></span>
                 <span class="change">Change From yesterday: <span id="totalConfirmedChange">576</span></span>
             </div>
-
-            <!-- <div class="total-data">
-                <span>Critical Cases</span>
-                <span id="totalCritical" class="critical">42537 <i class="fa fa-long-arrow-up"></i></span>
-                <span class="change">Change From yesterday: <span id="totalCriticalChange">576</span></span>
-            </div> -->
 
             <div class="total-data">
                 <span>Recovered</span>
@@ -75,31 +63,14 @@
 
         <!-- World map and Pie-Chart Show -->
         <div class="row world-data-showcase">
-            <div class="world-data" id="world-map"><span style="font-size: 12px;">Confirmed Cases By Country</span></div>
-            <div class="world-data" style="font-size: 12px;">Overall Active Cases <svg id="worldActivePieChart"></svg>
+            <div class="world-data col-md-8" id="world-map">
+                <span>Confirmed Cases By Country</span>
+                <svg id="worldMultilineChart"></svg>
             </div>
-            <!-- <div id="topCountry">
-                <div id="topCountryConfirmed" class="world-data">
-                    <span>Country with Highest Confirmed Cases</span>
-                    <span class="confirmed"></span>
-                    <span class="confirmed"></span>
-                </div>
-                <div id="topCountryDeaths" class="world-data">
-                    <span>Country with Highest Deaths</span>
-                    <span class="death"></span>
-                    <span class="death"></span>
-                </div>
-                <div id="topCountryRecovered" class="world-data">
-                    <span>Country with Highest Recovered Cases</span>
-                    <span class="recover"></span>
-                    <span class="recover"></span>
-                </div>
-                <div id="topCountryCritical" class="world-data">
-                    <span>Country with Highest Critical Cases</span>
-                    <span class="critical"></span>
-                    <span class="critical"></span>
-                </div>
-            </div> -->
+            <div class="world-data col-md-4">
+                <span>Overall Active Cases</span>
+                <svg id="worldActivePieChart"></svg>
+            </div>
         </div>
     </div>
 

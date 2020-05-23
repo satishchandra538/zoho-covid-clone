@@ -1,12 +1,10 @@
 const countrySelection = document.getElementById("countrySelection");
 const totalConfirmedInDoc = document.getElementById("totalConfirmed");
-//const totalActiveInDoc = document.getElementById("totalActive");
 const totalDeathInDoc = document.getElementById("totalDeaths");
 const totalCriticalInDoc = document.getElementById("totalCritical");
 const totalRecoveredInDoc = document.getElementById("totalRecovered");
 const totalDeathRateInDoc = document.getElementById("deathRate");
 const totalRecoveryRateInDoc = document.getElementById("recoveryRate");
-//const highestCountryNameInDoc = document.querySelector('#topCountry').children;
 
 const fetchData = async () => {
     const data = await fetch('https://pomber.github.io/covid19/timeseries.json');
@@ -49,31 +47,22 @@ const fetchData = async () => {
     let totalRecoveryRate = Math.floor((totalRecovered * 100 / totalConfirmed) * 100) / 100;
     totalRecoveryRateInDoc.innerHTML = totalRecoveryRate + "%";
 
-    //Adding data in highest confirmed country
-    // highestCountryNameInDoc[0].children[1].innerHTML = countries[0][0];
-    // highestCountryNameInDoc[1].children[1].innerHTML = countries[0][0];
-    // highestCountryNameInDoc[2].children[1].innerHTML = countries[0][0];
-    // highestCountryNameInDoc[3].children[1].innerHTML = countries[0][0];
-    // highestCountryNameInDoc[0].children[2].innerHTML = countries[0][1][days - 1].confirmed;
-    // highestCountryNameInDoc[1].children[2].innerHTML = countries[0][1][days - 1].deaths;
-    // highestCountryNameInDoc[2].children[2].innerHTML = countries[0][1][days - 1].recovered;
-
     //Adding Donut char for whole wold data
-
     var pie = d3.pie();
+    var pieCharParent = document.getElementById('worldActivePieChart').parentElement;
+    var pieChartWidth = pieCharParent.offsetWidth;
     var worldActivePieChart = d3.select("#worldActivePieChart")
-    .attr('width',window.innerWidth*.3)
+        .attr('width', pieChartWidth)
+        .attr('height', pieChartWidth)
 
-    var pieChartWidth = window.innerWidth * .3;
-
-    console.log(worldActivePieChart._groups[0][0].clientWidth,pieChartWidth)
+    console.log(pieChartWidth)
 
     var g = worldActivePieChart.append('g')
         .attr('transform', `translate(${pieChartWidth / 2},${pieChartWidth / 2})`)
     var color = d3.scaleOrdinal(['green', 'orange', 'brown']);
     var arc = d3.arc()
-        .innerRadius(pieChartWidth / 2-60)
-        .outerRadius(pieChartWidth/2 - 10)
+        .innerRadius(pieChartWidth / 2 - 70)
+        .outerRadius(pieChartWidth / 2 - 15)
     var arcs = g.selectAll('arc')
         .data(pie([totalRecovered, totalActive, totalDeath]))
         .enter()
@@ -87,6 +76,8 @@ const fetchData = async () => {
             return color(i);
         })
         .attr("d", arc)
-        
+
+    //Adding Multiline Graph
+
 }
 fetchData()
