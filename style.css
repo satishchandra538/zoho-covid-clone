@@ -125,3 +125,12 @@ body {
     background-color: var(--secondary-color);
     text-align: center;
 }
+line{
+    stroke:white
+}
+text{
+    fill:white
+}
+path{
+    stroke:white
+}

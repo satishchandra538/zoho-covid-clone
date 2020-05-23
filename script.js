@@ -10,8 +10,15 @@ const fetchData = async () => {
     const data = await fetch('https://pomber.github.io/covid19/timeseries.json');
     const jsonData = await data.json();
 
-    const countries = Object.keys(jsonData).map((country) => {
+    var countries = Object.keys(jsonData).map((country) => {
         return [country, jsonData[country]]
+    })
+    //parsing date
+    var parseDate = d3.timeParse("%Y-%m-%d");
+    countries.forEach(country => {
+        country[1].forEach(day => {
+            day.date = parseDate(day.date)
+        })
     })
 
     //sorting country according to confirmed cases
@@ -55,8 +62,6 @@ const fetchData = async () => {
         .attr('width', pieChartWidth)
         .attr('height', pieChartWidth)
 
-    console.log(pieChartWidth)
-
     var g = worldActivePieChart.append('g')
         .attr('transform', `translate(${pieChartWidth / 2},${pieChartWidth / 2})`)
     var color = d3.scaleOrdinal(['green', 'orange', 'brown']);
@@ -77,7 +82,44 @@ const fetchData = async () => {
         })
         .attr("d", arc)
 
-    //Adding Multiline Graph
+    //Adding Multiline Graph-----------
+
+    console.log(countries[0])
+    var LineGraphParent = document.getElementById('worldMultilineChart').parentElement;
+
+    const svgLineGraph = d3.select('#worldMultilineChart')
+        .attr('width',LineGraphParent.offsetWidth)
+        .attr('height',pieChartWidth)
+        .style('color','white')
+
+    const gLineGraph=svgLineGraph.append('g')
+        .attr('transform',`translate(${60},${0})`)
+
+    const maxinfection = countries[0][1][countries[0][1].length-1].confirmed;
+
+    const xScale = d3.scaleTime()
+        .domain(d3.extent(countries[0][1],d=>d.date))
+        .range([0, LineGraphParent.offsetWidth])
+
+    const xAxis = d3.axisBottom(xScale);
+    gLineGraph.append('g').call(xAxis).attr('transform', `translate(${0},${pieChartWidth-25})`);
+
+    const yScale = d3.scaleLinear()
+        .domain([maxinfection,0])
+        .range([0,pieChartWidth])
+    const yAxis = d3.axisLeft(yScale);
+    gLineGraph.append('g').call(yAxis).attr('transform', `translate(${0},${-25})`)
+
+    gLineGraph.append('path')
+        .datum(countries[0][1])
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.line()
+            .x(function (d) { return xScale(d.date) })
+            .y(function (d) { return yScale(d.confirmed) })
+        )
+        .attr('transform', `translate(${0},${-25})`)
 
 }
 fetchData()
