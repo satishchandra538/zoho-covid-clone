@@ -6,6 +6,7 @@ const totalRecoveredInDoc = document.getElementById("totalRecovered");
 const totalDeathRateInDoc = document.getElementById("deathRate");
 const totalRecoveryRateInDoc = document.getElementById("recoveryRate");
 
+
 const fetchData = async () => {
     const data = await fetch('https://pomber.github.io/covid19/timeseries.json');
     const jsonData = await data.json();
@@ -54,6 +55,12 @@ const fetchData = async () => {
     let totalRecoveryRate = Math.floor((totalRecovered * 100 / totalConfirmed) * 100) / 100;
     totalRecoveryRateInDoc.innerHTML = totalRecoveryRate + "%";
 
+    //Tool tip div element
+    const div = d3
+        .select('body')
+        .append('div')
+        .attr('class', 'tooltip')
+
     //Adding Donut char for whole wold data
     var pie = d3.pie();
     var pieCharParent = document.getElementById('worldActivePieChart').parentElement;
@@ -72,54 +79,94 @@ const fetchData = async () => {
         .data(pie([totalRecovered, totalActive, totalDeath]))
         .enter()
         .append('g')
-        .on('mouseover', (d) => {
-            console.log(d);
-        });
 
     arcs.append('path')
         .attr("fill", function (d, i) {
             return color(i);
         })
         .attr("d", arc)
+        .on('mouseover', function(d) {
+            div.transition()
+                .duration(200)
+                .style('opacity', 0.9);
+            div.html(
+                `<span style=";font-size:16px;font-weight:bold">WORLD</span>`
+                + '<br/>'
+                + `<span style="color:gray">${this.__data__.value}</span>`)
+                .style('left', d3.event.pageX + 'px')
+                .style('top', d3.event.pageY - 28 + 'px');
+        })
 
     //Adding Multiline Graph-----------
-
-    console.log(countries[0])
     var LineGraphParent = document.getElementById('worldMultilineChart').parentElement;
 
     const svgLineGraph = d3.select('#worldMultilineChart')
-        .attr('width',LineGraphParent.offsetWidth)
-        .attr('height',pieChartWidth)
-        .style('color','white')
+        .attr('width', LineGraphParent.offsetWidth)
+        .attr('height', pieChartWidth)
 
-    const gLineGraph=svgLineGraph.append('g')
-        .attr('transform',`translate(${60},${0})`)
+    const gLineGraph = svgLineGraph.append('g')
+        .attr('transform', `translate(${60},${0})`)
 
-    const maxinfection = countries[0][1][countries[0][1].length-1].confirmed;
+    const maxinfection = countries[0][1][countries[0][1].length - 1].confirmed;
 
     const xScale = d3.scaleTime()
-        .domain(d3.extent(countries[0][1],d=>d.date))
+        .domain(d3.extent(countries[0][1], d => d.date))
         .range([0, LineGraphParent.offsetWidth])
-
-    const xAxis = d3.axisBottom(xScale);
-    gLineGraph.append('g').call(xAxis).attr('transform', `translate(${0},${pieChartWidth-25})`);
+        .nice()
+    const xTicks = 6;
+    const xAxis = d3.axisBottom(xScale)
+        .ticks(xTicks);
+    gLineGraph.append('g')
+        .call(xAxis)
+        .attr('class','xaxis')
+        .attr('transform', `translate(${0},${pieChartWidth - 25})`);
 
     const yScale = d3.scaleLinear()
-        .domain([maxinfection,0])
-        .range([0,pieChartWidth])
+        .domain([maxinfection, 0])
+        .range([0, pieChartWidth])
+        .nice()
     const yAxis = d3.axisLeft(yScale);
-    gLineGraph.append('g').call(yAxis).attr('transform', `translate(${0},${-25})`)
-
-    gLineGraph.append('path')
-        .datum(countries[0][1])
-        .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 1.5)
-        .attr("d", d3.line()
-            .x(function (d) { return xScale(d.date) })
-            .y(function (d) { return yScale(d.confirmed) })
-        )
+    gLineGraph.append('g')
+        .call(yAxis)
+        .attr('class', 'xaxis')
         .attr('transform', `translate(${0},${-25})`)
+    const lineColor = d3.scaleOrdinal().range(d3.schemeCategory10);
+    const line = d3.line()
+        .curve(d3.curveMonotoneX)
+        .x(d => xScale(d.date))
+        .y(d => yScale(d.confirmed));
 
+    const top10 = countries.splice(0,10);
+
+    var country = gLineGraph.selectAll(".country")
+        .data(top10)
+        .enter()
+        .append("g")
+        .attr("class",d=>`country ${d[0]}`);
+
+    country.append('path')
+        .attr('fill','none')
+        .style("stroke", d=>lineColor(d[0]))
+        .attr("stroke-width", 1.5)
+        .attr("d", (d, i) => line(d[1]))
+        .attr('transform', `translate(${-10},${-25})`)
+        .on('mouseover', d => {
+            div
+                .transition()
+                .duration(200)
+                .style('opacity', 0.9);
+            div.html(
+                `<span style="color:${lineColor(d[0])};font-size:16px;font-weight:bold">${d[0]}</span>`
+                + '<br/>'
+                + `<span style="color:${lineColor(d[0])};">total cases=${d[1][days - 1].confirmed}</span>`)
+                .style('left', d3.event.pageX + 'px')
+                .style('top', d3.event.pageY - 28 + 'px');
+        })
+        // .on('mouseout', () => {
+        //     div
+        //         .transition()
+        //         .duration(500)
+        //         .style('opacity', 0);
+        // })
 }
 fetchData()
