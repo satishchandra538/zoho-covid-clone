@@ -5,7 +5,7 @@ const totalCriticalInDoc = document.getElementById("totalCritical");
 const totalRecoveredInDoc = document.getElementById("totalRecovered");
 const totalDeathRateInDoc = document.getElementById("deathRate");
 const totalRecoveryRateInDoc = document.getElementById("recoveryRate");
-
+const worldTable = document.getElementById("worldTable");
 
 const fetchData = async () => {
     const data = await fetch('https://pomber.github.io/covid19/timeseries.json');
@@ -86,6 +86,9 @@ const fetchData = async () => {
         })
         .attr("d", arc)
         .on('mouseover', function (d) {
+            //console.log(this, this.__data__.startAngle)
+            // this.__data__.startAngle
+            //this.__data__.startAngle+=0.4;
             div.transition()
                 .duration(200)
                 .style('opacity', 0.9);
@@ -175,11 +178,36 @@ const fetchData = async () => {
                 .style('left', d3.event.pageX + 'px')
                 .style('top', d3.event.pageY - 28 + 'px');
         })
-    // .on('mouseout', () => {
-    //     div
-    //         .transition()
-    //         .duration(500)
-    //         .style('opacity', 0);
-    // })
+        // .on('mouseout', () => {
+        //     div
+        //         .transition()
+        //         .duration(500)
+        //         .style('opacity', 0);
+        // })
+
+    //Table making
+
+    //console.log(worldTable.parentElement)
+    worldTable.parentElement=60
+    countries.forEach((country, index) => {
+        let Sr = index + 1 + '.';
+        let TR = document.createElement("tr");
+        let TDcountry = document.createElement("td");
+        let TDconfirmed = document.createElement("td");
+        let TDrecovered = document.createElement("td");
+        let TDdeath = document.createElement("td");
+        let TDactive = document.createElement("td");
+        TDconfirmed.classList.add('confirmed');
+        TDrecovered.classList.add('recover');
+        TDdeath.classList.add('death');
+        TDactive.classList.add('active');
+        TDcountry.innerHTML = country[0];
+        TDconfirmed.innerHTML=country[1][days-1].confirmed;
+        TDrecovered.innerHTML = country[1][days - 1].recovered;
+        TDdeath.innerHTML = country[1][days - 1].deaths;
+        TDactive.innerHTML = country[1][days - 1].confirmed - country[1][days - 1].recovered - country[1][days - 1].deaths;
+        TR.append(Sr, TDcountry, TDconfirmed, TDrecovered, TDdeath, TDactive)
+        worldTable.appendChild(TR);
+    })
 }
 fetchData()
