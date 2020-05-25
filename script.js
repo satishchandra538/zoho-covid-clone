@@ -152,7 +152,10 @@ const fetchData = async () => {
         .x(d => xScale(d.date))
         .y(d => yScale(d.confirmed));
 
-    const top10 = countries.splice(0, 10);
+    const top10 = [];
+    for (let i = 0; i < 10; i++) {
+        top10.push(countries[i]);
+    }
 
     var country = gLineGraph.selectAll(".country")
         .data(top10)
@@ -178,17 +181,17 @@ const fetchData = async () => {
                 .style('left', d3.event.pageX + 'px')
                 .style('top', d3.event.pageY - 28 + 'px');
         })
-        // .on('mouseout', () => {
-        //     div
-        //         .transition()
-        //         .duration(500)
-        //         .style('opacity', 0);
-        // })
+    // .on('mouseout', () => {
+    //     div
+    //         .transition()
+    //         .duration(500)
+    //         .style('opacity', 0);
+    // })
 
     //Table making
 
     //console.log(worldTable.parentElement)
-    worldTable.parentElement=60
+    worldTable.parentElement = 60
     countries.forEach((country, index) => {
         let Sr = index + 1 + '.';
         let TR = document.createElement("tr");
@@ -202,7 +205,7 @@ const fetchData = async () => {
         TDdeath.classList.add('death');
         TDactive.classList.add('active');
         TDcountry.innerHTML = country[0];
-        TDconfirmed.innerHTML=country[1][days-1].confirmed;
+        TDconfirmed.innerHTML = country[1][days - 1].confirmed;
         TDrecovered.innerHTML = country[1][days - 1].recovered;
         TDdeath.innerHTML = country[1][days - 1].deaths;
         TDactive.innerHTML = country[1][days - 1].confirmed - country[1][days - 1].recovered - country[1][days - 1].deaths;
