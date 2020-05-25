@@ -1,5 +1,5 @@
 :root {
-    --primary-color: rgb(20, 31, 66);
+    --primary-color:#3F51B5;
     --secondary-color: rgb(28, 41, 87);
     --border-color: rgb(69, 82, 129);
     --hover-color: rgb(132, 143, 182);
@@ -9,18 +9,28 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: var(--primary-color);
+    background-color: white;
     color: white;
     font-family: Arial, Helvetica, sans-serif;
 }
+.change-total{
+    font-size:1rem !important;
+}
+.primary{
+color: var(--primary-color);
 
+}
+.primary-bg {
+    background: var(--primary-color);
+}
 .header {
     font-size: 30px;
     margin: 0 auto;
     text-align: center;
-    background-color: var(--secondary-color);
-    padding: 0 10px;
+    background-color:white;
+    padding: 1rem 30px;
     width: 100%;
+    color:steelblue
 }
 
 .country-selection {
@@ -61,26 +71,34 @@ body {
     border: 1px solid white;
 }
 
-.confirmed {
-    color: red;
+.red {
+    color: #F44336;
     font-weight: 600;
 }
-
-.active {
-    color: orange;
-    font-weight: 600;
+.red-bg {
+    background: #F44336;
 }
 
-.critical {
+.orange {
+    color: #f39c12;
+    font-weight: 600;
+}
+.orange-bg {
+    background:#f39c12;
+}
+
+.yellow {
     color: yellow;
     font-weight: 600;
 }
 
-.recover {
-    color: greenyellow;
+.green   {
+    color: #27ae60;
     font-weight: 600;
 }
-
+.green-bg{
+    background: #27ae60;
+}
 .death {
     color: rgb(155, 141, 141);
     font-weight: 600;
@@ -92,7 +110,10 @@ body {
     justify-content: space-evenly;
     transition: all 0.8s;
 }
-
+.number {
+    font-size:2vw !important;
+    padding:0.5rem;
+}
 .total-data {
     display: flex;
     flex-direction: column;
@@ -101,9 +122,13 @@ body {
     font-size: 0.9rem;
     border-radius: 0.6rem;
     border: 1px solid var(--border-color);
-    padding: 0.3rem;
-    margin-right: 1px;
-    background-color: var(--secondary-color);
+}
+.title{
+font-size: max(1vw,10px);
+color:white;
+width: 100%;
+padding:0.5rem;
+border-radius: 0.5rem 0.5rem 0rem 0rem ;
 }
 
 .total-data .change {
@@ -119,26 +144,25 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 0.6rem;
-    border: 1px solid var(--border-color);
-    border-radius: 0.3rem;
-    background-color: var(--secondary-color);
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    border : 0.4px solid steelblue;
     text-align: center;
 }
 .xaxis path,
 .xaxis .tick line {
-    stroke:white
+    stroke:black
 }
 .xaxis .tick text{
-    fill:white
+    fill:black
 }
 .yaxis path,
 .yaxis .tick line {
-    stroke: white
+    stroke: black
 }
 
 .yaxis .tick text {
-    fill: white
+    fill: black
 }
 .tooltip{
     background-color: rgba(255, 255, 255, 0.836);
