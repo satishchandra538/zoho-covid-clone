@@ -85,14 +85,27 @@ const fetchData = async () => {
             return color(i);
         })
         .attr("d", arc)
-        .on('mouseover', function(d) {
+        .on('mouseover', function (d) {
             div.transition()
                 .duration(200)
                 .style('opacity', 0.9);
-            div.html(
-                `<span style=";font-size:16px;font-weight:bold">WORLD</span>`
-                + '<br/>'
-                + `<span style="color:gray">${this.__data__.value}</span>`)
+            if (this.attributes[0].nodeValue == "orange") {
+                div.html(
+                    `<span style=";font-size:16px;font-weight:bold;color:orange">Active Cases=${this.__data__.value}</span>`
+                )
+            }
+            else if (this.attributes[0].nodeValue == "brown") {
+                div.html(
+                    `<span style=";font-size:16px;font-weight:bold;color:brown">Total Deaths=${this.__data__.value}</span>`
+                )
+            }
+            else if (this.attributes[0].nodeValue == "green") {
+                div.html(
+                    `<span style=";font-size:16px;font-weight:bold;color:green">Total Recovered=${this.__data__.value}</span>`
+                )
+            }
+
+            div
                 .style('left', d3.event.pageX + 'px')
                 .style('top', d3.event.pageY - 28 + 'px');
         })
@@ -118,7 +131,7 @@ const fetchData = async () => {
         .ticks(xTicks);
     gLineGraph.append('g')
         .call(xAxis)
-        .attr('class','xaxis')
+        .attr('class', 'xaxis')
         .attr('transform', `translate(${0},${pieChartWidth - 25})`);
 
     const yScale = d3.scaleLinear()
@@ -136,17 +149,17 @@ const fetchData = async () => {
         .x(d => xScale(d.date))
         .y(d => yScale(d.confirmed));
 
-    const top10 = countries.splice(0,10);
+    const top10 = countries.splice(0, 10);
 
     var country = gLineGraph.selectAll(".country")
         .data(top10)
         .enter()
         .append("g")
-        .attr("class",d=>`country ${d[0]}`);
+        .attr("class", d => `country ${d[0]}`);
 
     country.append('path')
-        .attr('fill','none')
-        .style("stroke", d=>lineColor(d[0]))
+        .attr('fill', 'none')
+        .style("stroke", d => lineColor(d[0]))
         .attr("stroke-width", 1.5)
         .attr("d", (d, i) => line(d[1]))
         .attr('transform', `translate(${-10},${-25})`)
@@ -162,11 +175,11 @@ const fetchData = async () => {
                 .style('left', d3.event.pageX + 'px')
                 .style('top', d3.event.pageY - 28 + 'px');
         })
-        // .on('mouseout', () => {
-        //     div
-        //         .transition()
-        //         .duration(500)
-        //         .style('opacity', 0);
-        // })
+    // .on('mouseout', () => {
+    //     div
+    //         .transition()
+    //         .duration(500)
+    //         .style('opacity', 0);
+    // })
 }
 fetchData()
