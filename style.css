@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #3F51B5;
+    --primary-color:#3F51B5;
     --secondary-color: rgb(28, 41, 87);
     --border-color: rgb(69, 82, 129);
     --hover-color: rgb(132, 143, 182);
@@ -13,28 +13,24 @@ body {
     color: white;
     font-family: Arial, Helvetica, sans-serif;
 }
-
-.change-total {
-    font-size: 1rem !important;
+.change-total{
+    font-size:1rem !important;
 }
-
-.primary {
-    color: var(--primary-color);
+.primary{
+color: var(--primary-color);
 
 }
-
 .primary-bg {
     background: var(--primary-color);
 }
-
 .header {
     font-size: 30px;
     margin: 0 auto;
     text-align: center;
-    background-color: white;
+    background-color:white;
     padding: 1rem 30px;
     width: 100%;
-    color: steelblue
+    color:steelblue
 }
 
 .country-selection {
@@ -79,7 +75,6 @@ body {
     color: #F44336;
     font-weight: 600;
 }
-
 .red-bg {
     background: #F44336;
 }
@@ -88,9 +83,8 @@ body {
     color: #f39c12;
     font-weight: 600;
 }
-
 .orange-bg {
-    background: #f39c12;
+    background:#f39c12;
 }
 
 .yellow {
@@ -98,15 +92,13 @@ body {
     font-weight: 600;
 }
 
-.green {
+.green   {
     color: #27ae60;
     font-weight: 600;
 }
-
-.green-bg {
+.green-bg{
     background: #27ae60;
 }
-
 .death {
     color: rgb(155, 141, 141);
     font-weight: 600;
@@ -118,12 +110,10 @@ body {
     justify-content: space-evenly;
     transition: all 0.8s;
 }
-
 .number {
-    font-size: 2vw !important;
-    padding: 0.5rem;
+    font-size:2vw !important;
+    padding:0.5rem;
 }
-
 .total-data {
     display: flex;
     flex-direction: column;
@@ -133,13 +123,12 @@ body {
     border-radius: 0.6rem;
     border: 1px solid var(--border-color);
 }
-
-.title {
-    font-size: max(1vw, 10px);
-    color: white;
-    width: 100%;
-    padding: 0.5rem;
-    border-radius: 0.5rem 0.5rem 0rem 0rem;
+.title{
+font-size: max(1vw,10px);
+color:white;
+width: 100%;
+padding:0.5rem;
+border-radius: 0.5rem 0.5rem 0rem 0rem ;
 }
 
 .total-data .change {
@@ -157,17 +146,16 @@ body {
     align-items: center;
     font-size: 1rem;
     border-radius: 0.5rem;
-    border: 0.4px solid steelblue;
+    border : 0.4px solid steelblue;
     text-align: center;
 }
 
 .xaxis path,
 .xaxis .tick line {
-    stroke: black
+    stroke:black
 }
-
-.xaxis .tick text {
-    fill: black
+.xaxis .tick text{
+    fill:black
 }
 
 .yaxis path,
