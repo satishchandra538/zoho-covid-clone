@@ -114,17 +114,17 @@ const fetchData = async () => {
                 .style('opacity', 0.9);
             if (this.attributes[0].nodeValue == "orange") {
                 div.html(
-                    `<span style=";font-size:16px;font-weight:bold;color:orange">Active Cases=${this.__data__.value}</span>`
+                    `Active Cases:<span style=";font-size:16px;font-weight:bold;color:orange"> ${this.__data__.value}</span>`
                 )
             }
             else if (this.attributes[0].nodeValue == "brown") {
                 div.html(
-                    `<span style=";font-size:16px;font-weight:bold;color:brown">Total Deaths=${this.__data__.value}</span>`
+                    `Total Deaths:<span style=";font-size:16px;font-weight:bold;color:brown"> ${this.__data__.value}</span>`
                 )
             }
             else if (this.attributes[0].nodeValue == "green") {
                 div.html(
-                    `<span style=";font-size:16px;font-weight:bold;color:green">Total Recovered=${this.__data__.value}</span>`
+                    `Total Recovered:<span style=";font-size:16px;font-weight:bold;color:green"> ${this.__data__.value}</span>`
                 )
             }
 
@@ -161,8 +161,7 @@ const fetchData = async () => {
         .attr('y', 10)
         .text(d => d.label);
 
-
-    //-----------------Adding Multiline Graph-----------
+    //////////////////////////////////--------Adding Multiline Graph-----------
     var LineGraphParent = document.getElementById('worldMultilineChart').parentElement;
 
     const svgLineGraph = d3.select('#worldMultilineChart')
@@ -236,6 +235,7 @@ const fetchData = async () => {
         .attr("d", (d, i) => line(d[1]))
         .attr('transform', `translate(${-60},${-25})`)
         .on('mouseover', d => {
+            //console.log(d3.event, xScale(-d3.event.layerX*100))
             div
                 .transition()
                 .duration(200)
@@ -255,8 +255,7 @@ const fetchData = async () => {
     // })
 
 
-    //Table making
-    //worldTable.parentElement = 60;
+    ///////////////----------Table making-----------
     console.log(worldTable)
     countries.forEach((country, index) => {
         let Sr = index + 1 + '.';
