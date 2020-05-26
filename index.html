@@ -19,7 +19,7 @@
         <div class="row">
             <div class="header"><span>COVID-19 Dashboard</span></div>
         </div>
-        <hr style="background-color:brown;height:5px;margin-top: 0;padding: 0;" />
+        <hr style="background-color:steelblue;height:2px;margin-top: 0;padding: 0;" />
 
         <!-- selction element for countries -->
         <div class="row country-selection">
@@ -32,44 +32,63 @@
 
         <!-- Show case of different cases -->
         <div class="row top-data-show">
-            <div class="total-data">
-                <span>Confirmed Cases</span>
-                <span id="totalConfirmed" class="confirmed"></span>
-                <span class="change">Change From yesterday: <span id="totalConfirmedChange">6576</span></span>
+            <div class="col-3 primary">
+                <div class="total-data">
+                    <span class="title primary-bg">Confirmed Cases</span>
+                    <span id="totalConfirmed" class="number "></span>
+                    <span class="change">Change From yesterday: <span id="totalConfirmedChange"
+                            class="change-total">6576</span></span>
+                </div>
             </div>
 
-            <div class="total-data">
-                <span>Deaths</span>
-                <span id="totalDeaths" class="death"></span>
-                <span class="change">Change From yesterday: <span id="totalConfirmedChange">576</span></span>
+            <div class=" col-3 red">
+                <div class="total-data">
+                    <span class="title red-bg">Deaths</span>
+                    <span id="totalDeaths" class="number"></span>
+                    <span class="change">Change From yesterday: <span id="totalConfirmedChange"
+                            class="change-total">576</span></span>
+                </div>
             </div>
 
-            <div class="total-data">
-                <span>Recovered</span>
-                <span id="totalRecovered" class="recover">72537 <i class="fa fa-long-arrow-up"></i></span>
-                <span class="change">Change From yesterday: <span id="totalRecoveredChange"></span></span>
+            <div class=" col-2 primary orange">
+                <div class="total-data ">
+                    <span class="title orange-bg">Recovered</span>
+                    <span id="totalRecovered" class="number">72537 <i class="fa fa-long-arrow-up"></i></span>
+                    <span class="change">Change From yesterday: <span id="totalRecoveredChange"
+                            class="change-total">345</span></span>
+                </div>
+
             </div>
 
-            <div class="total-data">
-                <span>Death rate</span>
-                <span id="deathRate" class="death"></span>
+            <div class="col-2 primary red">
+                <div class="total-data ">
+                    <span class="title red-bg">Death rate</span>
+                    <span id="deathRate" class="number"></span>
+                </div>
             </div>
 
-            <div class="total-data">
-                <span>Recovery rate</span>
-                <span id="recoveryRate" class="recover"></span>
+            <div class="col-2 primary green">
+                <div class="total-data ">
+                    <span class="title green-bg">Recovery rate</span>
+                    <span id="recoveryRate" class="number"></span>
+                </div>
+
             </div>
         </div>
 
         <!-- World map and Pie-Chart Show -->
         <div class="row world-data-showcase">
-            <div class="world-data col-md-8" id="world-map">
-                <span>Confirmed Cases By Country</span>
-                <svg id="worldMultilineChart"></svg>
+            <div class="viz-div col-md-8">
+                <div class="world-data" id="world-map">
+                    <span class="title primary-bg">New Cases in countries</span>
+                    <svg id="worldMultilineChart"></svg>
+                </div>
             </div>
-            <div class="world-data col-md-4">
-                <span>Overall Active Cases</span>
-                <svg id="worldActivePieChart"></svg>
+            <div class="viz-div col-md-4">
+                <div class="world-data ">
+                    <span class="title primary-bg">Overall Active Cases</span>
+                    <svg id="worldActivePieChart"></svg>
+                </div>
             </div>
         </div>
 
@@ -89,12 +108,13 @@
                         </tr>
                     </thead>
                     <tbody id="worldTable">
-                        
+
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
 
     <!-- Adding Bootstrap Script -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script>
