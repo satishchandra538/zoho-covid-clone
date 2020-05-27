@@ -35,9 +35,7 @@
             <div class="col-md-3 primary">
                 <div class="total-data">
                     <span class="title primary-bg">Confirmed Cases</span>
-                    <span id="totalConfirmed" class="number "></span>
-                    <span class="change">Change From yesterday: <span id="totalConfirmedChange"
-                            class="change-total"></span></span>
+                    <span id="totalConfirmed" class="number"></span>
                 </div>
             </div>
 
@@ -45,8 +43,6 @@
                 <div class="total-data">
                     <span class="title red-bg">Deaths</span>
                     <span id="totalDeaths" class="number"></span>
-                    <span class="change">Change From yesterday: <span id="totalDeathChange"
-                            class="change-total"></span></span>
                 </div>
             </div>
 
@@ -54,19 +50,17 @@
                 <div class="total-data ">
                     <span class="title orange-bg">Recovered</span>
                     <span id="totalRecovered" class="number"></span>
-                    <span class="change">Change From yesterday: <span id="totalRecoveredChange"
-                            class="change-total"></span></span>
                 </div>
             </div>
 
-            <div class="col-md-1.5 primary red">
+            <div class="col-md primary red">
                 <div class="total-data ">
                     <span class="title red-bg">Death rate</span>
                     <span id="deathRate" class="number"></span>
                 </div>
             </div>
 
-            <div class="col-md-1.5 primary green">
+            <div class="col-md primary green">
                 <div class="total-data ">
                     <span class="title green-bg">Recovery rate</span>
                     <span id="recoveryRate" class="number"></span>
@@ -88,15 +82,13 @@
         <br />
         <div class="row">
             <div class="world-table col-md-6">
-                <table class="table table-bordered table-responsive">
-                    <thead>
+                <table class="table table-bordered table-responsive table-striped table-hover" style="width:100%">
+                    <thead class="table-dark">
                         <tr>
-                            <th class="serial-bg">Sr.</th>
-                            <th class="country-bg">Country🏁</th>
-                            <th class="primary-bg">Confirmed😷</th>
-                            <th class="orange-bg">Recovered😃</th>
-                            <th class="red-bg">Death⚰️</th>
-                            <!-- <th>Active</th> -->
+                            <th style="width:30%">Country</th>
+                            <th style="width:15%">Cases</th>
+                            <th style="width:15%">Deaths</th>
+                            <th style="width:40%">Death Rate</th>
                         </tr>
                     </thead>
                     <tbody id="worldTable">

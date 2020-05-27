@@ -6,9 +6,6 @@ const totalRecoveredInDoc = document.getElementById("totalRecovered");
 const totalDeathRateInDoc = document.getElementById("deathRate");
 const totalRecoveryRateInDoc = document.getElementById("recoveryRate");
 const worldTable = document.getElementById("worldTable");
-const totalConfirmedChangeInDoc = document.getElementById('totalConfirmedChange');
-const totalDeathChangeInDoc = document.getElementById('totalDeathChange');
-const totalRecoveredChangeInDoc = document.getElementById('totalRecoveredChange');
 
 const fetchData = async () => {
     const data = await fetch('https://pomber.github.io/covid19/timeseries.json');
@@ -40,6 +37,7 @@ const fetchData = async () => {
     let totalConfirmedChange = 0;
     let totalDeathChange = 0;
     let totalRecoveredChange = 0;
+    let countryWithHighestDeathRate = 0;
     countries.forEach(country => {
         const option = document.createElement("option");
         option.value = country[0];
@@ -52,16 +50,13 @@ const fetchData = async () => {
         totalRecovered += country[1][days - 1].recovered;
         totalRecoveredChange += country[1][days - 2].recovered;
         totalDeath += country[1][days - 1].deaths;
-        totalDeathChange += country[1][days - 2].deaths
+        totalDeathChange += country[1][days - 2].deaths;
+        countryWithHighestDeathRate = countryWithHighestDeathRate > (country[1][days - 2].deaths / country[1][days - 2].confirmed) * 100 ? countryWithHighestDeathRate : (country[1][days - 2].deaths / country[1][days - 2].confirmed) * 100;
     })
     let totalActive = totalConfirmed - totalDeath - totalRecovered;
-    totalConfirmedInDoc.innerHTML = totalConfirmed + ' <i class="fa fa-long-arrow-up"></i>';
-    totalConfirmedChangeInDoc.innerHTML = totalConfirmed - totalConfirmedChange + "+";
-    //totalActiveInDoc.innerHTML = totalActive + ' <i class="fa fa-long-arrow-up"></i>';
-    totalDeathInDoc.innerHTML = totalDeath + ' <i class="fa fa-long-arrow-up"></i>';
-    totalDeathChangeInDoc.innerHTML = totalDeath - totalDeathChange + "+";
-    totalRecoveredInDoc.innerHTML = totalRecovered + ' <i class="fa fa-long-arrow-up"></i>';
-    totalRecoveredChangeInDoc.innerHTML = totalRecovered - totalRecoveredChange + "+";
+    totalConfirmedInDoc.innerHTML = totalConfirmed + ' <i class="fa fa-long-arrow-up"></i>' + `(${totalConfirmed - totalConfirmedChange}+)`;
+    totalDeathInDoc.innerHTML = totalDeath + ' <i class="fa fa-long-arrow-up"></i>' + `(${totalDeath - totalDeathChange}+)`;
+    totalRecoveredInDoc.innerHTML = totalRecovered + ' <i class="fa fa-long-arrow-up"></i>' + `(${totalRecovered - totalRecoveredChange}+)`;
     let totalDeathRate = Math.floor((totalDeath * 100 / totalConfirmed) * 100) / 100;
     totalDeathRateInDoc.innerHTML = totalDeathRate + "%";
     let totalRecoveryRate = Math.floor((totalRecovered * 100 / totalConfirmed) * 100) / 100;
@@ -89,7 +84,7 @@ const fetchData = async () => {
     var arc = d3.arc()
         .innerRadius(pieChartWidth / 2 - 60)
         .outerRadius(pieChartWidth / 2 - 5)
-    console.log(donutColor());
+
     const donutData = {
         "totalRecovered": totalRecovered,
         "totalActive": totalActive,
@@ -253,29 +248,34 @@ const fetchData = async () => {
     //         .duration(500)
     //         .style('opacity', 0);
     // })
-
+    country.append('text')
+        .style("fill", d => lineColor(d[0]))
+        .text(d => d[0])
+        .style("font-weight", 600)
+        .attr('x', d => xScale(d[1][days - 1 - 50].date) - 70)
+        .attr('y', d => yScale(d[1][days - 1 - 50].confirmed) - 15)
+    //.attr('translate',`transform(${-100},${-100})`)
 
     ///////////////----------Table making-----------
-    console.log(worldTable)
     countries.forEach((country, index) => {
-        let Sr = index + 1 + '.';
         let TR = document.createElement("tr");
-        let TDserial = document.createElement("td");
         let TDcountry = document.createElement("td");
-        let TDconfirmed = document.createElement("td");
-        let TDrecovered = document.createElement("td");
+        let TDcases = document.createElement("td");
         let TDdeath = document.createElement("td");
-        TDconfirmed.classList.add('primary-bg');
-        TDrecovered.classList.add('orange-bg');
-        TDdeath.classList.add('red-bg');
-        TDcountry.classList.add('country-bg');
-        TDserial.classList.add('serial-bg')
-        TDserial.innerHTML = Sr;
-        TDcountry.innerHTML = `${country[0]}`; //+`<img src='' alt='🏁' />`
-        TDconfirmed.innerHTML = country[1][days - 1].confirmed;
-        TDrecovered.innerHTML = country[1][days - 1].recovered;
+        let TDdeathrate = document.createElement("td");
+        let countryDeathRate = ((country[1][days - 1].deaths * 100) / country[1][days - 1].confirmed).toFixed(1);
+        if (countryDeathRate < 10) {
+            countryDeathRate = ". " + countryDeathRate;
+        }
+        let barWidth = (((country[1][days - 1].deaths / country[1][days - 1].confirmed) * 100) / countryWithHighestDeathRate) * 150;
+        let deathRateBar = `<svg width="170" height="20">
+            <rect width=${barWidth} height="20" fill="brown"></rect>
+        </svg>`
+        TDcountry.innerHTML = `${country[0]}`;
+        TDcases.innerHTML = country[1][days - 1].confirmed;
         TDdeath.innerHTML = country[1][days - 1].deaths;
-        TR.append(TDserial, TDcountry, TDconfirmed, TDrecovered, TDdeath)
+        TDdeathrate.innerHTML = countryDeathRate + "% " + deathRateBar;
+        TR.append(TDcountry, TDcases, TDdeath, TDdeathrate)
         worldTable.appendChild(TR);
     })
 }

@@ -14,10 +14,6 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.change-total {
-    font-size: 1rem !important;
-}
-
 .primary {
     color: var(--primary-color);
 
@@ -141,18 +137,20 @@ body {
     font-size: 0.9rem;
     border-radius: 0.6rem;
     border: 1px solid var(--border-color);
+    margin: 5px;
+}
+
+.total-data:hover {
+    box-shadow: inset 5px -5px 5px silver,
+        5px -5px 5px silver;
 }
 
 .title {
-    font-size: max(1vw, 10px);
+    font-size: max(1vw, 12px);
     color: white;
     width: 100%;
     padding: 0.5rem;
     border-radius: 0.5rem 0.5rem 0 0;
-}
-
-.total-data .change {
-    font-size: 0.6rem;
 }
 
 /* world map data */
@@ -199,8 +197,6 @@ body {
 }
 
 .table {
-    color: white;
-    border-color: white;
     height: 76vh;
     table-layout: auto;
 }
