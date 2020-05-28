@@ -69,6 +69,12 @@ const fetchData = async () => {
         .attr('class', 'tooltip')
 
     //Adding Donut char for whole wold data
+    const donutData = {
+        data: [{ label: 'totalRecovered', value: totalRecovered },
+        { label: 'totalActive', value: totalActive },
+        { label: 'totalDeath', value: totalDeath },
+        ]
+    }
     var pie = d3.pie();
     var pieCharParent = document.getElementById('worldActivePieChart').parentElement;
     var pieChartWidth = pieCharParent.offsetWidth * 0.6;
@@ -85,11 +91,6 @@ const fetchData = async () => {
         .innerRadius(pieChartWidth / 2 - 60)
         .outerRadius(pieChartWidth / 2 - 5)
 
-    const donutData = {
-        "totalRecovered": totalRecovered,
-        "totalActive": totalActive,
-        "totalDeath": totalDeath
-    };
     var arcs = g.selectAll('arc')
         .data(pie([totalRecovered, totalActive, totalDeath]))
         .enter()
@@ -127,18 +128,13 @@ const fetchData = async () => {
                 .style('left', d3.event.pageX + 'px')
                 .style('top', d3.event.pageY - 28 + 'px');
         })
-    //Adding legend in donut Chart
+    //Adding legend -------------
     const legendDonut = worldActivePieChart.append('g')
         .attr('class', 'legend-donut')
         .attr('transform', 'translate(40,150)');
-    const blabla = {
-        data: [{ label: 'totalRecovered', value: totalRecovered },
-        { label: 'totalActive', value: totalActive },
-        { label: 'totalDeath', value: totalDeath },
-        ]
-    }
+
     const lg = legendDonut.selectAll('g')
-        .data(blabla.data)
+        .data(donutData.data)
         .enter()
         .append('g')
         .attr('transform', (d, i) => `translate(${120},${i * 30})`);
@@ -155,6 +151,42 @@ const fetchData = async () => {
         .attr('x', 17.5)
         .attr('y', 10)
         .text(d => d.label);
+    //draw tick marks ---------------
+    var label_group = arcs.append('g');
+    var lines = label_group.selectAll("arc").data(donutData.data);
+    lines.enter()
+        .append("line")
+        .attr("x1", 0)
+        .attr("x2", 0)
+        .attr("y1", function (d) {
+            console.log(d)
+            if (d.value > 2000) {
+                return 650;
+            } else {
+                return 34;
+            }
+        })
+        .attr("y2", function (d) {
+            if (d.value > 2000) {
+                return 55;
+            }
+            else {
+                return -76;
+            }
+        })
+        .attr("stroke", "gray")
+        // .attr("transform", function (d) {
+        //     console.log(d,this.parentElement)
+        //     return "rotate(" + (d.startAngle + d.endAngle) / 2 * (180 / Math.PI) + ")";
+        // });
+
+    lines.transition()
+        .duration(this.tweenDuration)
+        .attr("transform", function (d) {
+            return "rotate(" + (d.startAngle + d.endAngle) / 2 * (180 / Math.PI) + ")";
+        });
+
+    lines.exit().remove();
 
     //////////////////////////////////--------Adding Multiline Graph-----------
     var LineGraphParent = document.getElementById('worldMultilineChart').parentElement;
@@ -242,12 +274,12 @@ const fetchData = async () => {
                 .style('left', d3.event.pageX + 'px')
                 .style('top', d3.event.pageY - 28 + 'px');
         })
-    // .on('mouseout', () => {
-    //     div
-    //         .transition()
-    //         .duration(500)
-    //         .style('opacity', 0);
-    // })
+        // .on('mouseout', () => {
+        //     div
+        //         .transition()
+        //         .duration(500)
+        //         .style('opacity', 0);
+        // })
     country.append('text')
         .style("fill", d => lineColor(d[0]))
         .text(d => d[0])

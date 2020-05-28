@@ -210,13 +210,14 @@ body {
     table-layout: auto;
 }
 #tableSearchInput{
-    width: 3.5rem;
-    border-radius: 0.3rem;
+    width: 4.5rem;
+    border-radius: 1rem;
     border: 1px solid var(--border-color);
     outline: none;
     transition: all 0.8s;
 }
-#tableSearchInput:focus{
+#tableSearchInput:focus,
+#tableSearchInput:hover {
     width: 8rem;
     transition: all 0.8s;
 }
