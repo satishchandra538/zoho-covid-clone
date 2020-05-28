@@ -1,6 +1,6 @@
 const countrySelection = document.getElementById("countrySelection");
 const totalConfirmedInDoc = document.getElementById("totalConfirmed");
-const totalDeathInDoc = document.getElementById("totalDeaths");
+const totalDeathsInDoc = document.getElementById("totalDeaths");
 const totalCriticalInDoc = document.getElementById("totalCritical");
 const totalRecoveredInDoc = document.getElementById("totalRecovered");
 const totalDeathRateInDoc = document.getElementById("deathRate");
@@ -54,9 +54,9 @@ const fetchData = async () => {
         countryWithHighestDeathRate = countryWithHighestDeathRate > (country[1][days - 2].deaths / country[1][days - 2].confirmed) * 100 ? countryWithHighestDeathRate : (country[1][days - 2].deaths / country[1][days - 2].confirmed) * 100;
     })
     let totalActive = totalConfirmed - totalDeath - totalRecovered;
-    totalConfirmedInDoc.innerHTML = totalConfirmed + ' <i class="fa fa-long-arrow-up"></i>' + `(${totalConfirmed - totalConfirmedChange}+)`;
-    totalDeathInDoc.innerHTML = totalDeath + ' <i class="fa fa-long-arrow-up"></i>' + `(${totalDeath - totalDeathChange}+)`;
-    totalRecoveredInDoc.innerHTML = totalRecovered + ' <i class="fa fa-long-arrow-up"></i>' + `(${totalRecovered - totalRecoveredChange}+)`;
+    totalConfirmedInDoc.innerHTML = totalConfirmed + `<span class="change"> (${totalConfirmed - totalConfirmedChange}+)</span>`;
+    totalDeathsInDoc.innerHTML = totalDeath + `<span class="change"> (${totalDeath - totalDeathChange}+)</span>`;
+    totalRecoveredInDoc.innerHTML = totalRecovered + `<span class="change"> (${totalRecovered - totalRecoveredChange}+)</span>`;
     let totalDeathRate = Math.floor((totalDeath * 100 / totalConfirmed) * 100) / 100;
     totalDeathRateInDoc.innerHTML = totalDeathRate + "%";
     let totalRecoveryRate = Math.floor((totalRecovered * 100 / totalConfirmed) * 100) / 100;
@@ -252,9 +252,9 @@ const fetchData = async () => {
         .style("fill", d => lineColor(d[0]))
         .text(d => d[0])
         .style("font-weight", 600)
-        .attr('x', d => xScale(d[1][days - 1 - 50].date) - 70)
-        .attr('y', d => yScale(d[1][days - 1 - 50].confirmed) - 15)
-    //.attr('translate',`transform(${-100},${-100})`)
+        .attr('x', d => xScale(d[1][days - 1 - 50].date) - 60)
+        .attr('y', d => yScale(d[1][days - 1 - 50].confirmed) - 20)
+    //.attr('translate',`transform(${0},${0})`)
 
     ///////////////----------Table making-----------
     countries.forEach((country, index) => {
@@ -278,5 +278,26 @@ const fetchData = async () => {
         TR.append(TDcountry, TDcases, TDdeath, TDdeathrate)
         worldTable.appendChild(TR);
     })
+
 }
 fetchData()
+
+///////////filter in table
+const searchCountry = () => {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("tableSearchInput");
+    filter = input.value.toUpperCase();
+    table = worldTable.parentNode;
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
