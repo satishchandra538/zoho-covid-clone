@@ -204,18 +204,21 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 5px;
 }
+
 /* Table style */
 .table {
-    height: 76vh;
+    height: 99vh;
     table-layout: auto;
 }
-#tableSearchInput{
+
+#tableSearchInput {
     width: 4.5rem;
     border-radius: 1rem;
     border: 1px solid var(--border-color);
     outline: none;
     transition: all 0.8s;
 }
+
 #tableSearchInput:focus,
 #tableSearchInput:hover {
     width: 8rem;

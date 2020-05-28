@@ -68,125 +68,85 @@ const fetchData = async () => {
         .append('div')
         .attr('class', 'tooltip')
 
-    //Adding Donut char for whole wold data
-    const donutData = {
-        data: [{ label: 'totalRecovered', value: totalRecovered },
-        { label: 'totalActive', value: totalActive },
-        { label: 'totalDeath', value: totalDeath },
-        ]
-    }
-    var pie = d3.pie();
+    //Adding Donut char for whole wold data-----------------
+    
     var pieCharParent = document.getElementById('worldActivePieChart').parentElement;
     var pieChartWidth = pieCharParent.offsetWidth * 0.6;
-    var donutColor = d3.scaleOrdinal(['brown', 'green', 'orange']);
+    var radius = pieChartWidth / 2;
+    const donutData = [{ label: 'totalRecovered', value: totalRecovered },
+                       { label: 'totalActive', value: totalActive },
+                       { label: 'totalDeath', value: totalDeath }];
 
     var worldActivePieChart = d3.select("#worldActivePieChart")
-        .attr('width', pieChartWidth)
-        .attr('height', pieChartWidth)
+        .attr("width", pieCharParent.offsetWidth)
+        .attr("height", pieCharParent.offsetWidth/1.2)
+        .append('g')
+        .attr('transform', `translate(${pieChartWidth / 1.2},${pieChartWidth / 1.2})`)
 
-    var g = worldActivePieChart.append('g')
-        .attr('transform', `translate(${pieChartWidth / 2},${pieChartWidth / 2})`)
+    var color = d3.scaleOrdinal()
+        .domain(donutData.map(d => d.label))
+        .range(d3.schemeDark2);
+
+    var pie = d3.pie()
+        .value(function (d) { return d.value.value; })
+    var data_ready = pie(d3.entries(donutData))
 
     var arc = d3.arc()
-        .innerRadius(pieChartWidth / 2 - 60)
-        .outerRadius(pieChartWidth / 2 - 5)
+        .innerRadius(radius * 0.5)
+        .outerRadius(radius * 0.8)
 
-    var arcs = g.selectAll('arc')
-        .data(pie([totalRecovered, totalActive, totalDeath]))
+    // Another arc that won't be drawn. Just for labels positioning
+    var outerArc = d3.arc()
+        .innerRadius(radius * 0.9)
+        .outerRadius(radius * 0.9)
+
+    // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+    worldActivePieChart
+        .selectAll('allSlices')
+        .data(data_ready)
         .enter()
-        .append('g')
+        .append('path')
+        .attr('d', arc)
+        .attr('fill', function (d) { return (color(d.data.key)) })
+        .attr("stroke", "white")
+        .style("stroke-width", "2px")
+        .style("opacity", 0.7)
 
-    arcs.append('path')
-        .attr("fill", function (d, i) {
-            return donutColor(i);
-        })
-        .attr("d", arc)
-        .on('mouseover', function (d) {
-            //console.log(this, this.__data__.startAngle)
-            // this.__data__.startAngle
-            //this.__data__.startAngle+=0.4;
-            div.transition()
-                .duration(200)
-                .style('opacity', 0.9);
-            if (this.attributes[0].nodeValue == "orange") {
-                div.html(
-                    `Active Cases:<span style=";font-size:16px;font-weight:bold;color:orange"> ${this.__data__.value}</span>`
-                )
-            }
-            else if (this.attributes[0].nodeValue == "brown") {
-                div.html(
-                    `Total Deaths:<span style=";font-size:16px;font-weight:bold;color:brown"> ${this.__data__.value}</span>`
-                )
-            }
-            else if (this.attributes[0].nodeValue == "green") {
-                div.html(
-                    `Total Recovered:<span style=";font-size:16px;font-weight:bold;color:green"> ${this.__data__.value}</span>`
-                )
-            }
-
-            div
-                .style('left', d3.event.pageX + 'px')
-                .style('top', d3.event.pageY - 28 + 'px');
-        })
-    //Adding legend -------------
-    const legendDonut = worldActivePieChart.append('g')
-        .attr('class', 'legend-donut')
-        .attr('transform', 'translate(40,150)');
-
-    const lg = legendDonut.selectAll('g')
-        .data(donutData.data)
+    // Add the polylines between chart and labels:
+    worldActivePieChart
+        .selectAll('allPolylines')
+        .data(data_ready)
         .enter()
-        .append('g')
-        .attr('transform', (d, i) => `translate(${120},${i * 30})`);
-    lg.append('rect')
-        .style('fill', d => donutColor(d.value))
-        .attr('x', 0)
-        .attr('y', 0)
-        .attr('width', 10)
-        .attr('height', 10);
-
-    lg.append('text')
-        .style('font-family', 'Georgia')
-        .style('font-size', '13px')
-        .attr('x', 17.5)
-        .attr('y', 10)
-        .text(d => d.label);
-    //draw tick marks ---------------
-    var label_group = arcs.append('g');
-    var lines = label_group.selectAll("arc").data(donutData.data);
-    lines.enter()
-        .append("line")
-        .attr("x1", 0)
-        .attr("x2", 0)
-        .attr("y1", function (d) {
-            console.log(d)
-            if (d.value > 2000) {
-                return 650;
-            } else {
-                return 34;
-            }
+        .append('polyline')
+        .attr("stroke", "black")
+        .style("fill", "none")
+        .attr("stroke-width", 1)
+        .attr('points', function (d) {
+            var posA = arc.centroid(d) // line insertion in the slice
+            var posB = outerArc.centroid(d) // line break: we use the other arc generator that has been built only for that
+            var posC = outerArc.centroid(d); // Label position = almost the same as posB
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2 // we need the angle to see if the X position will be at the extreme right or extreme left
+            posC[0] = radius * 0.95 * (midangle < Math.PI ? 1 : -1); // multiply by 1 or -1 to put it on the right or on the left
+            return [posA, posB, posC]
         })
-        .attr("y2", function (d) {
-            if (d.value > 2000) {
-                return 55;
-            }
-            else {
-                return -76;
-            }
+
+    // Add the polylines between chart and labels:
+    worldActivePieChart
+        .selectAll('allLabels')
+        .data(data_ready)
+        .enter()
+        .append('text')
+        .text(function (d) { return d.data.value.label })
+        .attr('transform', function (d) {
+            var pos = outerArc.centroid(d);
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+            pos[0] = radius * 0.99 * (midangle < Math.PI ? 1 : -1);
+            return 'translate(' + pos + ')';
         })
-        .attr("stroke", "gray")
-        // .attr("transform", function (d) {
-        //     console.log(d,this.parentElement)
-        //     return "rotate(" + (d.startAngle + d.endAngle) / 2 * (180 / Math.PI) + ")";
-        // });
-
-    lines.transition()
-        .duration(this.tweenDuration)
-        .attr("transform", function (d) {
-            return "rotate(" + (d.startAngle + d.endAngle) / 2 * (180 / Math.PI) + ")";
-        });
-
-    lines.exit().remove();
+        .style('text-anchor', function (d) {
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+            return (midangle < Math.PI ? 'start' : 'end')
+        })
 
     //////////////////////////////////--------Adding Multiline Graph-----------
     var LineGraphParent = document.getElementById('worldMultilineChart').parentElement;
@@ -300,7 +260,7 @@ const fetchData = async () => {
             countryDeathRate = ". " + countryDeathRate;
         }
         let barWidth = (((country[1][days - 1].deaths / country[1][days - 1].confirmed) * 100) / countryWithHighestDeathRate) * 150;
-        let deathRateBar = `<svg width="170" height="20">
+        let deathRateBar = `<svg width="100" height="20">
             <rect width=${barWidth} height="20" fill="brown"></rect>
         </svg>`
         TDcountry.innerHTML = `${country[0]}`;
