@@ -31,13 +31,7 @@ const fetchData = async () => {
         })
     })
 
-    //sorting country according to confirmed cases
     days = countries[0][1].length;
-    for (let i = 0; i < countries.length; i++) {
-        countries.sort((a, b) => {
-            return b[1][days - 1].confirmed - a[1][days - 1].confirmed;
-        })
-    }
 
     //add countrySelection
     let totalConfirmed = 0;
@@ -114,13 +108,24 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
     const gLineGraph = svgLineGraph.append('g')
         .attr('transform', `translate(${60},${30})`)
 
-    const maxinfection = countries[0][1][days - 1].confirmed;
+    //sorting country according to confirmed cases
+    const sortBy = document.getElementById("sortBy").value;
+    const fromDayInRange = document.getElementById('fromDayInRange');
+    fromDayInRange.max = days;
+    document.getElementById('fromDay').innerHTML = fromDayInRange.value;
+    console.log(fromDayInRange)
+    var fromDay = fromDayInRange.value;
+    for (let i = 0; i < countries.length; i++) {
+        countries.sort((a, b) => {
+            return b[1][days - 1-fromDay][sortBy] - a[1][days - 1-fromDay][sortBy];
+        })
+    }
     //Graph from day 51 to till date
     const newData = [];
     countries.forEach(country => {
         let name = country[0];
         let data = [];
-        for (let i = 50; i < days; i++) {
+        for (let i = fromDay; i < days; i++) {
             data.push(country[1][i]);
         }
         let set = [];
@@ -128,27 +133,36 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         set.push(data);
         newData.push(set);
     })
+    console.log("newData=", newData, "countries=", countries)
+    var maxYValue = 0;
+    countries.forEach(country=>{
+        country[1].forEach(day=>{
+            maxYValue = maxYValue < day[sortBy] ? day[sortBy] : maxYValue;
+        })
+    })
 
     const xScale = d3.scaleTime()
         .domain(d3.extent(newData[0][1], d => d.date))
-        //.domain([countries[0][1][50].date, countries[0][1][days-1].date])
-        .range([0, LineGraphParent.offsetWidth])
+        //.domain([countries[0][1][fromDay].date, countries[0][1][days-1].date])
+        .range([0, LineGraphParent.offsetWidth-80])
         .nice()
     const xTicks = 6;
     const xAxis = d3.axisBottom(xScale)
         .ticks(xTicks)
     //.tickSize(-LineGraphParent.offsetHeight + 65);
+    svgLineGraph.selectAll('.xaxis').remove();
     gLineGraph.append('g')
         .call(xAxis)
         .attr('class', 'xaxis')
         .attr('transform', `translate(${0},${LineGraphParent.offsetWidth * .4 - lineGraphAxisMargin.bottom - 30})`);
 
     const yScale = d3.scaleLinear()
-        .domain([maxinfection, 0])
+        .domain([maxYValue, 0])
         .range([0, LineGraphParent.offsetWidth * .4 - 30])
         .nice()
     const yAxis = d3.axisLeft(yScale)
-    //.tickSize(-LineGraphParent.offsetWidth + 70);;
+    //.tickSize(-LineGraphParent.offsetWidth + 70);
+    svgLineGraph.selectAll('.yaxis').remove();
     gLineGraph.append('g')
         .call(yAxis)
         .attr('class', 'yaxis')
@@ -214,8 +228,8 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         .style("fill", d => lineColor(d[0]))
         .text(d => d[0])
         .style("font-weight", 600)
-        .attr('x', d => xScale(d[1][days - 1 - 50].date) - 90)
-        .attr('y', d => yScale(d[1][days - 1 - 50].confirmed) - 20)
+        .attr('x', d => xScale(d[1][days - 1 - fromDay].date) - 90)
+        .attr('y', d => yScale(d[1][days - 1 - fromDay].confirmed) - 20)
         .attr('class', 'line-graph-country-legend')
     //.attr('translate',`transform(${0},${0})`)
 }

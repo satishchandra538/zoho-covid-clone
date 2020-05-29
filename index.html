@@ -73,8 +73,21 @@
             <div class="viz-div col-md-12">
                 <div class="world-data" id="world-map">
                     <span class="title primary-bg">New Cases in countries</span>
-                    <input type="number" id="numberOfCountriesInLineChart" name="numberOfCountriesInLineChart" value="1"
-                        min="1" onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
+                    <div class="controls">
+                        <span>Top</span>
+                        <input type="number" id="numberOfCountriesInLineChart" name="numberOfCountriesInLineChart" value="1" min="1"
+                            onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
+                        <span>Countries sorted by:</span>
+                        <select name="sort" id="sortBy" onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
+                            <option value="confirmed" selected>Confirmed</option>
+                            <option value="deaths">Death</option>
+                            <option value="recovered">Recovered</option>
+                        </select>
+                        from day 
+                        <span id="fromDay"></span>
+                        <input type="range" value="50" min="1" id="fromDayInRange" onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
+                         to till date.
+                    </div>
                     <svg id="worldMultilineChart"></svg>
                 </div>
             </div>
