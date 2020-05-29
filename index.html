@@ -73,6 +73,8 @@
             <div class="viz-div col-md-12">
                 <div class="world-data" id="world-map">
                     <span class="title primary-bg">New Cases in countries</span>
+                    <input type="number" id="numberOfCountriesInLineChart" name="numberOfCountriesInLineChart" value="1"
+                        min="1" onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
                     <svg id="worldMultilineChart"></svg>
                 </div>
             </div>

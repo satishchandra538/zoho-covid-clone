@@ -178,9 +178,10 @@ body {
     padding: 0;
 }
 
-.line-graph-country-legend{
+.line-graph-country-legend {
     text-shadow: 1px 1px rgb(255, 255, 255);
 }
+
 .xaxis path,
 .xaxis .tick line,
 .yaxis path,

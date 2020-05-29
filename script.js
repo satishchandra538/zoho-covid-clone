@@ -7,17 +7,20 @@ const totalDeathRateInDoc = document.getElementById("deathRate");
 const totalRecoveryRateInDoc = document.getElementById("recoveryRate");
 const worldTable = document.getElementById("worldTable");
 
+var countries = {};
+var days = 0;
 //Tool tip div element
 const div = d3
     .select('body')
     .append('div')
     .attr('class', 'tooltip')
+const numberOfCountriesInLineChart = 1;
 
 const fetchData = async () => {
     const data = await fetch('https://pomber.github.io/covid19/timeseries.json');
     const jsonData = await data.json();
 
-    var countries = Object.keys(jsonData).map((country) => {
+    countries = Object.keys(jsonData).map((country) => {
         return [country, jsonData[country]]
     })
     //parsing date
@@ -29,7 +32,7 @@ const fetchData = async () => {
     })
 
     //sorting country according to confirmed cases
-    let days = countries[0][1].length;
+    days = countries[0][1].length;
     for (let i = 0; i < countries.length; i++) {
         countries.sort((a, b) => {
             return b[1][days - 1].confirmed - a[1][days - 1].confirmed;
@@ -68,13 +71,13 @@ const fetchData = async () => {
     let totalRecoveryRate = Math.floor((totalRecovered * 100 / totalConfirmed) * 100) / 100;
     totalRecoveryRateInDoc.innerHTML = totalRecoveryRate + "%";
 
-    //Adding Donut char for whole wold data-----------------
-    donutChart(totalActive,totalDeath);
+    //--------Adding Donut char for whole wold data---------
+    donutChart(totalActive, totalDeath, totalRecovered);
 
-    //////////////////////////////////--------Adding Multiline Graph-----------
-    multiLineGraph(countries,days);
+    //--------Adding Multiline Graph------------------------
+    multiLineGraph(countries, days, numberOfCountriesInLineChart);
 
-    ///////////////----------Table making-----------
+    //--------Table making----------------------------------
     countries.forEach((country, index) => {
         let TR = document.createElement("tr");
         let TDcountry = document.createElement("td");
@@ -101,7 +104,7 @@ const fetchData = async () => {
 fetchData()
 
 //---------MultiLine Graph------------------------/////////////
-const multiLineGraph = (countries, days) => {
+const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
     var LineGraphParent = document.getElementById('worldMultilineChart').parentElement;
     const lineGraphAxisMargin = { left: 60, top: 30, right: 80, bottom: 20 }
     const svgLineGraph = d3.select('#worldMultilineChart')
@@ -156,16 +159,49 @@ const multiLineGraph = (countries, days) => {
         .x(d => xScale(d.date))
         .y(d => yScale(d.confirmed));
 
-    const top10 = [];
-    for (let i = 0; i < 10; i++) {
-        top10.push(newData[i]);
-    }
+    const topX = [];
 
+    var numberOfCountriesInLineChart = document.getElementById('numberOfCountriesInLineChart').value;
+    for (let i = 0; i < numberOfCountriesInLineChart; i++) {
+        topX.push(newData[i]);
+    }
+    svgLineGraph.selectAll(".country").remove();
     var country = gLineGraph.selectAll(".country")
-        .data(top10)
+        .data(topX)
         .enter()
         .append("g")
         .attr("class", d => `country ${d[0]}`);
+
+    svgLineGraph.selectAll('.legend-circle').remove();
+    gLineGraph.selectAll('.legend-circles-path')
+        .data(topX)
+        .enter()
+        .append('g')
+        .attr('class', 'legend-circle')
+        .attr('fill', d => lineColor(d[0]))
+        .selectAll('circle')
+        .data(d => d[1])
+        .enter()
+        .append('circle')
+        .attr("r", 1.5)
+        .attr("cx", d => xScale(d.date))
+        .attr("cy", d => yScale(d.confirmed))
+        .attr('transform', `translate(${-60},${-lineGraphAxisMargin.bottom})`)
+        .on('mouseover', d => {
+            div
+                .transition()
+                .duration(200)
+                .style('opacity', 0.9);
+            div.html(
+                `<span style="font-size:16px"><b>Confirmed</b>: ${d.confirmed}</span>
+                <br/>
+                <span style="color:black"><b>Deaths</b>: ${d.deaths}</span>
+                <br/>
+                <span style="color:black"><b>Date</b>: ${(d.date).toString().substring(0, 16)}</span>`
+            )
+                .style('left', d3.event.pageX + 'px')
+                .style('top', d3.event.pageY - 28 + 'px');
+        })
 
     country.append('path')
         .attr('fill', 'none')
@@ -173,25 +209,7 @@ const multiLineGraph = (countries, days) => {
         .attr("stroke-width", 1.5)
         .attr("d", d => line(d[1]))
         .attr('transform', `translate(${-60},${-lineGraphAxisMargin.bottom})`)
-        .on('mouseover', d => {
-            //console.log(d3.event, xScale(-d3.event.layerX*100))
-            div
-                .transition()
-                .duration(200)
-                .style('opacity', 0.9);
-            div.html(
-                `<span style="color:${lineColor(d[0])};font-size:16px;font-weight:bold">${d[0]}</span>`
-                + '<br/>'
-                + `<span style="color:${lineColor(d[0])};">total cases=${d[1][days - 1 - 50].confirmed}</span>`)
-                .style('left', d3.event.pageX + 'px')
-                .style('top', d3.event.pageY - 28 + 'px');
-        })
-    // .on('mouseout', () => {
-    //     div
-    //         .transition()
-    //         .duration(500)
-    //         .style('opacity', 0);
-    // })
+
     country.append('text')
         .style("fill", d => lineColor(d[0]))
         .text(d => d[0])
@@ -203,7 +221,7 @@ const multiLineGraph = (countries, days) => {
 }
 
 //-----------Donut Chart---------------////////////
-const donutChart=(totalActive,totalDeath)=>{
+const donutChart = (totalActive, totalDeath, totalRecovered) => {
     var pieCharParent = document.getElementById('worldActivePieChart').parentElement;
     var pieChartWidth = pieCharParent.offsetWidth * 0.6;
     var radius = pieChartWidth / 2;
