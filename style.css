@@ -178,21 +178,18 @@ body {
     padding: 0;
 }
 
+.line-graph-country-legend{
+    text-shadow: 1px 1px rgb(255, 255, 255);
+}
 .xaxis path,
-.xaxis .tick line {
+.xaxis .tick line,
+.yaxis path,
+.yaxis .tick line {
     stroke: rgba(0, 0, 0, 0.589);
     stroke-width: 0.2;
 }
 
-.xaxis .tick text {
-    fill: black
-}
-
-.yaxis path,
-.yaxis .tick line {
-    stroke: black
-}
-
+.xaxis .tick text,
 .yaxis .tick text {
     fill: black
 }
