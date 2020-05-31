@@ -100,7 +100,7 @@ fetchData()
 //---------MultiLine Graph------------------------/////////////
 const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
     var LineGraphParent = document.getElementById('worldMultilineChart').parentElement;
-    const margin = { left: 60, top: 30, right: 80, bottom: 20 }
+    const margin = { left: 60, top: 30, right: 45, bottom: 20 }
     const svg = d3.select('#worldMultilineChart')
         .attr('width', LineGraphParent.offsetWidth)
         .attr('height', LineGraphParent.offsetWidth * .4)
@@ -137,20 +137,6 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         newData.push(set);
     })
 
-    const xScale = d3.scaleTime()
-        .domain(d3.extent(newData[0][1], d => d.date))
-        .range([0, LineGraphParent.offsetWidth - 80])
-        .nice()
-    const xTicks = 6;
-    const xAxis = d3.axisBottom(xScale)
-        .ticks(xTicks)
-        .tickSize(-LineGraphParent.offsetHeight + 65);
-    svg.selectAll('.xaxis').remove();
-    g.append('g')
-        .call(xAxis)
-        .attr('class', 'xaxis')
-        .attr('transform', `translate(${0},${LineGraphParent.offsetWidth * .4 - margin.bottom - 30})`);
-
     const topX = [];
     var numberOfCountriesInLineChart = document.getElementById('numberOfCountriesInLineChart').value;
     for (let i = 0; i < numberOfCountriesInLineChart; i++) {
@@ -163,14 +149,14 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
             maxYValue = maxYValue < day[sortBy] ? day[sortBy] : maxYValue;
         })
     })
-    //console.log(maxYValue, topX)
+    console.log(maxYValue, topX)
 
     const yScale = d3.scaleLinear()
         .domain([maxYValue, 0])
         .range([0, LineGraphParent.offsetWidth * .4 - 30])
         .nice()
     const yAxis = d3.axisLeft(yScale)
-        .tickSize(-LineGraphParent.offsetWidth + 70);
+        .tickSize(-LineGraphParent.offsetWidth + 80);
     svg.selectAll('.yaxis').remove();
     g.append('g')
         .call(yAxis)
@@ -181,16 +167,45 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         .curve(d3.curveMonotoneX)
         .x(d => xScale(d.date))
         .y(d => yScale(d.confirmed));
+    
+    const xScale = d3.scaleTime()
+        .domain(d3.extent(newData[0][1], d => d.date))
+        .range([0, LineGraphParent.offsetWidth - 80])
+        .nice()
+    const xTicks = 10;
+    const xAxis = d3.axisBottom(xScale)
+        .ticks(xTicks)
+        .tickSize(-LineGraphParent.offsetHeight+102);
+    svg.selectAll('.xaxis').remove();
+    g.append('g')
+        .call(xAxis)
+        .attr('class', 'xaxis')
+        .attr('transform', `translate(${0},${LineGraphParent.offsetWidth * .4 - margin.bottom - 30})`);
 
     svg.selectAll(".country").remove();
     var country = g.selectAll(".country")
         .data(topX)
         .enter()
         .append("g")
-        .attr("class", d => `country ${d[0]}`);
+        .attr("class", d => `country ${d[0]}`)
+        .attr('transform', `translate(${-margin.left + 61},${-margin.bottom})`);
+
+    country.append('path')
+        .attr('fill', 'none')
+        .style("stroke", d => lineColor(d[0]))
+        .attr("stroke-width", 1.5)
+        .attr("d", d => line(d[1]))
+
+    country.append('text')
+        .style("fill", d => lineColor(d[0]))
+        .text(d => d[0])
+        .style("font-weight", 600)
+        .attr('x', d => xScale(d[1][days - 1 - fromDay].date))
+        .attr('y', d => yScale(d[1][days - 1 - fromDay].confirmed))
+        .attr('class', 'line-graph-country-legend')
 
     svg.selectAll('.legend-circle').remove();
-    g.selectAll('.legend-circles-path')
+    country.selectAll('.legend-circles-path')
         .data(topX)
         .enter()
         .append('g')
@@ -203,12 +218,10 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         .attr("r", 1.5)
         .attr("cx", d => xScale(d.date))
         .attr("cy", d => yScale(d.confirmed))
-        .attr('transform', `translate(${-60},${-margin.bottom})`)
         .on('mouseover', d => {
-            div
-                .transition()
+            div.transition()
                 .duration(200)
-                .style('opacity', 0.9);
+                .style('opacity', 0.8);
             div.html(
                 `<span style="font-size:16px"><b>Confirmed</b>: ${d.confirmed}</span>
                 <br/>
@@ -216,28 +229,11 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
                 <br/>
                 <span style="color:black"><b>Date</b>: ${(d.date).toString().substring(0, 16)}</span>`
             )
-                .style('left', d3.event.pageX + 'px')
-                .style('top', d3.event.pageY - 28 + 'px');
+            .style('left', d3.event.pageX + 'px')
+            .style('top', d3.event.pageY - 28 + 'px');
         })
+        .on("mouseout", function (d) { div.style("opacity", 0) })
 
-    country.append('path')
-        .attr('fill', 'none')
-        .style("stroke", d => lineColor(d[0]))
-        .attr("stroke-width", 1.5)
-        .attr("d", d => line(d[1]))
-        .attr('transform', `translate(${-60},${-margin.bottom})`)
-
-    country.append('text')
-        .style("fill", d => lineColor(d[0]))
-        .text(d => d[0])
-        .style("font-weight", 600)
-        .attr('x', d => xScale(d[1][days - 1 - fromDay].date) - 90)
-        .attr('y', d => yScale(d[1][days - 1 - fromDay].confirmed) - 20)
-        .attr('class', 'line-graph-country-legend')
-    //.attr('translate',`transform(${0},${0})`)
-    g
-        .transition()
-        .duration(5000)
 }
 
 //-----------Donut Chart---------------////////////
