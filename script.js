@@ -100,27 +100,30 @@ fetchData()
 //---------MultiLine Graph------------------------/////////////
 const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
     var LineGraphParent = document.getElementById('worldMultilineChart').parentElement;
-    const lineGraphAxisMargin = { left: 60, top: 30, right: 80, bottom: 20 }
-    const svgLineGraph = d3.select('#worldMultilineChart')
+    const margin = { left: 60, top: 30, right: 80, bottom: 20 }
+    const svg = d3.select('#worldMultilineChart')
         .attr('width', LineGraphParent.offsetWidth)
         .attr('height', LineGraphParent.offsetWidth * .4)
 
-    const gLineGraph = svgLineGraph.append('g')
-        .attr('transform', `translate(${60},${30})`)
+    const g = svg.append('g')
+        .attr('transform', `translate(${margin.left},${margin.top})`)
 
     //sorting country according to confirmed cases
     const sortBy = document.getElementById("sortBy").value;
+
     const fromDayInRange = document.getElementById('fromDayInRange');
     fromDayInRange.max = days;
     document.getElementById('fromDay').innerHTML = fromDayInRange.value;
-    console.log(fromDayInRange)
+    document.getElementById('toDay').innerHTML = days;
+
     var fromDay = fromDayInRange.value;
-    for (let i = 0; i < countries.length; i++) {
         countries.sort((a, b) => {
-            return b[1][days - 1-fromDay][sortBy] - a[1][days - 1-fromDay][sortBy];
+            return b[1][fromDay][sortBy] - a[1][fromDay][sortBy];
         })
-    }
-    //Graph from day 51 to till date
+    // countries.forEach(country=>{
+    //     console.log(country[0],country[1])
+    // })
+    //Graph from day X to till date
     const newData = [];
     countries.forEach(country => {
         let name = country[0];
@@ -133,61 +136,61 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         set.push(data);
         newData.push(set);
     })
-    console.log("newData=", newData, "countries=", countries)
-    var maxYValue = 0;
-    countries.forEach(country=>{
-        country[1].forEach(day=>{
-            maxYValue = maxYValue < day[sortBy] ? day[sortBy] : maxYValue;
-        })
-    })
 
     const xScale = d3.scaleTime()
         .domain(d3.extent(newData[0][1], d => d.date))
-        //.domain([countries[0][1][fromDay].date, countries[0][1][days-1].date])
-        .range([0, LineGraphParent.offsetWidth-80])
+        .range([0, LineGraphParent.offsetWidth - 80])
         .nice()
     const xTicks = 6;
     const xAxis = d3.axisBottom(xScale)
         .ticks(xTicks)
-    //.tickSize(-LineGraphParent.offsetHeight + 65);
-    svgLineGraph.selectAll('.xaxis').remove();
-    gLineGraph.append('g')
+        .tickSize(-LineGraphParent.offsetHeight + 65);
+    svg.selectAll('.xaxis').remove();
+    g.append('g')
         .call(xAxis)
         .attr('class', 'xaxis')
-        .attr('transform', `translate(${0},${LineGraphParent.offsetWidth * .4 - lineGraphAxisMargin.bottom - 30})`);
+        .attr('transform', `translate(${0},${LineGraphParent.offsetWidth * .4 - margin.bottom - 30})`);
+
+    const topX = [];
+    var numberOfCountriesInLineChart = document.getElementById('numberOfCountriesInLineChart').value;
+    for (let i = 0; i < numberOfCountriesInLineChart; i++) {
+        topX.push(newData[i]);
+    }
+    
+    var maxYValue = 0;
+    topX.forEach(country => {
+        country[1].forEach(day => {
+            maxYValue = maxYValue < day[sortBy] ? day[sortBy] : maxYValue;
+        })
+    })
+    //console.log(maxYValue, topX)
 
     const yScale = d3.scaleLinear()
         .domain([maxYValue, 0])
         .range([0, LineGraphParent.offsetWidth * .4 - 30])
         .nice()
     const yAxis = d3.axisLeft(yScale)
-    //.tickSize(-LineGraphParent.offsetWidth + 70);
-    svgLineGraph.selectAll('.yaxis').remove();
-    gLineGraph.append('g')
+        .tickSize(-LineGraphParent.offsetWidth + 70);
+    svg.selectAll('.yaxis').remove();
+    g.append('g')
         .call(yAxis)
         .attr('class', 'yaxis')
-        .attr('transform', `translate(${0},${-lineGraphAxisMargin.bottom})`)
+        .attr('transform', `translate(${0},${-margin.bottom})`)
     const lineColor = d3.scaleOrdinal().range(d3.schemeCategory10);
     const line = d3.line()
         .curve(d3.curveMonotoneX)
         .x(d => xScale(d.date))
         .y(d => yScale(d.confirmed));
 
-    const topX = [];
-
-    var numberOfCountriesInLineChart = document.getElementById('numberOfCountriesInLineChart').value;
-    for (let i = 0; i < numberOfCountriesInLineChart; i++) {
-        topX.push(newData[i]);
-    }
-    svgLineGraph.selectAll(".country").remove();
-    var country = gLineGraph.selectAll(".country")
+    svg.selectAll(".country").remove();
+    var country = g.selectAll(".country")
         .data(topX)
         .enter()
         .append("g")
         .attr("class", d => `country ${d[0]}`);
 
-    svgLineGraph.selectAll('.legend-circle').remove();
-    gLineGraph.selectAll('.legend-circles-path')
+    svg.selectAll('.legend-circle').remove();
+    g.selectAll('.legend-circles-path')
         .data(topX)
         .enter()
         .append('g')
@@ -200,7 +203,7 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         .attr("r", 1.5)
         .attr("cx", d => xScale(d.date))
         .attr("cy", d => yScale(d.confirmed))
-        .attr('transform', `translate(${-60},${-lineGraphAxisMargin.bottom})`)
+        .attr('transform', `translate(${-60},${-margin.bottom})`)
         .on('mouseover', d => {
             div
                 .transition()
@@ -222,7 +225,7 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         .style("stroke", d => lineColor(d[0]))
         .attr("stroke-width", 1.5)
         .attr("d", d => line(d[1]))
-        .attr('transform', `translate(${-60},${-lineGraphAxisMargin.bottom})`)
+        .attr('transform', `translate(${-60},${-margin.bottom})`)
 
     country.append('text')
         .style("fill", d => lineColor(d[0]))
@@ -232,6 +235,9 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         .attr('y', d => yScale(d[1][days - 1 - fromDay].confirmed) - 20)
         .attr('class', 'line-graph-country-legend')
     //.attr('translate',`transform(${0},${0})`)
+    g
+        .transition()
+        .duration(5000)
 }
 
 //-----------Donut Chart---------------////////////
@@ -243,7 +249,7 @@ const donutChart = (totalActive, totalDeath, totalRecovered) => {
     { label: 'totalActive', value: totalActive },
     { label: 'totalDeath', value: totalDeath }];
 
-    var worldActivePieChart = d3.select("#worldActivePieChart")
+    var svg = d3.select("#worldActivePieChart")
         .attr("width", pieCharParent.offsetWidth)
         .attr("height", pieCharParent.offsetWidth / 1.2)
         .append('g')
@@ -267,7 +273,7 @@ const donutChart = (totalActive, totalDeath, totalRecovered) => {
         .outerRadius(radius * 0.9)
 
     // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
-    worldActivePieChart
+    svg
         .selectAll('allSlices')
         .data(data_ready)
         .enter()
@@ -279,7 +285,7 @@ const donutChart = (totalActive, totalDeath, totalRecovered) => {
         .style("opacity", 0.7)
 
     // Add the polylines between chart and labels:
-    worldActivePieChart
+    svg
         .selectAll('allPolylines')
         .data(data_ready)
         .enter()
@@ -297,7 +303,7 @@ const donutChart = (totalActive, totalDeath, totalRecovered) => {
         })
 
     // Add the polylines between chart and labels:
-    worldActivePieChart
+    svg
         .selectAll('allLabels')
         .data(data_ready)
         .enter()

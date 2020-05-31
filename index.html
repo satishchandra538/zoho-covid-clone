@@ -77,16 +77,16 @@
                         <span>Top</span>
                         <input type="number" id="numberOfCountriesInLineChart" name="numberOfCountriesInLineChart" value="1" min="1"
                             onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
-                        <span>Countries sorted by:</span>
+                        <span>Countries sorted by total</span>
                         <select name="sort" id="sortBy" onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
                             <option value="confirmed" selected>Confirmed</option>
-                            <option value="deaths">Death</option>
+                            <option value="deaths">Deaths</option>
                             <option value="recovered">Recovered</option>
                         </select>
-                        from day 
+                        cases on day 
                         <span id="fromDay"></span>
                         <input type="range" value="50" min="1" id="fromDayInRange" onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
-                         to till date.
+                        data upto day <span id="toDay"></span>.
                     </div>
                     <svg id="worldMultilineChart"></svg>
                 </div>
