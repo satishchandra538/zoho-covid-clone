@@ -120,9 +120,7 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         countries.sort((a, b) => {
             return b[1][fromDay][sortBy] - a[1][fromDay][sortBy];
         })
-    // countries.forEach(country=>{
-    //     console.log(country[0],country[1])
-    // })
+
     //Graph from day X to till date
     const newData = [];
     countries.forEach(country => {
@@ -149,7 +147,7 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
             maxYValue = maxYValue < day[sortBy] ? day[sortBy] : maxYValue;
         })
     })
-    console.log(maxYValue, topX)
+    //console.log(maxYValue, topX)
 
     const yScale = d3.scaleLinear()
         .domain([maxYValue, 0])
@@ -171,7 +169,7 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
     const xScale = d3.scaleTime()
         .domain(d3.extent(newData[0][1], d => d.date))
         .range([0, LineGraphParent.offsetWidth - 80])
-        .nice()
+
     const xTicks = 10;
     const xAxis = d3.axisBottom(xScale)
         .ticks(xTicks)
