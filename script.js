@@ -144,7 +144,7 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
     var maxYValue = 0;
     topX.forEach(country => {
         country[1].forEach(day => {
-            maxYValue = maxYValue < day[sortBy] ? day[sortBy] : maxYValue;
+            maxYValue = maxYValue < day.confirmed ? day.confirmed : maxYValue;
         })
     })
     //console.log(maxYValue, topX)
