@@ -1,0 +1,23 @@
+{
+  "name": "covid-viz",
+  "version": "1.0.0",
+  "description": "See work [here](https://satishchandra538.github.io/covid-viz/)",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/satishchandra538/covid-viz.git"
+  },
+  "author": "Satish Chandra Gupta",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/satishchandra538/covid-viz/issues"
+  },
+  "homepage": "https://github.com/satishchandra538/covid-viz#readme",
+  "dependencies": {
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  }
+}
