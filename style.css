@@ -181,26 +181,28 @@ body {
     font-weight: bold;
 }
 
-.xaxis .tick text{
+.xaxis .tick text {
     /* transform: rotate(-45deg) scale(1.1) translate(-22px, -12px); */
-    transform: translate(0,10px);
+    transform: translate(0, 10px);
 }
 
-.controls{
+.controls {
     color: #F44336;
     font-weight: 600;
     margin: 0.15rem 0 0 0.1rem;
     float: left;
 }
-.controls select{
+
+.controls select {
     border: none;
     background-color: #f39c12;
-    color:white
+    color: white
 }
-.controls input{
+
+.controls input {
     border: none;
     background-color: #f39c12;
-    color:white;
+    color: white;
     padding-left: 2px;
     width: 10%;
 }
@@ -212,6 +214,7 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 5px;
 }
+
 /* Table style */
 .table {
     height: 99vh;
