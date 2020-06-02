@@ -16,7 +16,6 @@ body {
 
 .primary {
     color: var(--primary-color);
-
 }
 
 .primary-bg {
@@ -61,22 +60,6 @@ body {
 
 .country-selection select option {
     font-size: 0.9rem;
-}
-
-.reset-button {
-    outline: none;
-    border: 1px solid var(--border-color);
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: white;
-    background-color: var(--secondary-color);
-    margin-left: 15px;
-    height: 1.5rem;
-    border-radius: 0.2rem;
-}
-
-.reset-button:hover {
-    border: 1px solid white;
 }
 
 .red {
@@ -192,7 +175,15 @@ body {
 
 .xaxis .tick text,
 .yaxis .tick text {
-    fill: black
+    fill: black;
+    font-size: 0.8rem;
+    opacity: 0.4;
+    font-weight: bold;
+}
+
+.xaxis .tick text{
+    /* transform: rotate(-45deg) scale(1.1) translate(-22px, -12px); */
+    transform: translate(0,10px);
 }
 
 .controls{
@@ -221,7 +212,6 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 5px;
 }
-
 /* Table style */
 .table {
     height: 99vh;

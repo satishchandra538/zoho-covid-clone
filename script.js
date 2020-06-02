@@ -7,6 +7,10 @@ const totalDeathRateInDoc = document.getElementById("deathRate");
 const totalRecoveryRateInDoc = document.getElementById("recoveryRate");
 const worldTable = document.getElementById("worldTable");
 
+// $(document).ready(function () {
+//     $('#countrySelection').select2();
+// });
+
 var countries = {};
 var days = 0;
 //Tool tip div element
@@ -41,12 +45,8 @@ const fetchData = async () => {
     let totalDeathChange = 0;
     let totalRecoveredChange = 0;
     let countryWithHighestDeathRate = 0;
-    countries.forEach(country => {
-        const option = document.createElement("option");
-        option.value = country[0];
-        option.innerHTML = country[0];
-        countrySelection.appendChild(option);
 
+    countries.forEach(country => {
         const days = country[1].length;
         totalConfirmed += country[1][days - 1].confirmed;
         totalConfirmedChange += country[1][days - 2].confirmed
@@ -56,6 +56,7 @@ const fetchData = async () => {
         totalDeathChange += country[1][days - 2].deaths;
         countryWithHighestDeathRate = countryWithHighestDeathRate > (country[1][days - 2].deaths / country[1][days - 2].confirmed) * 100 ? countryWithHighestDeathRate : (country[1][days - 2].deaths / country[1][days - 2].confirmed) * 100;
     })
+
     let totalActive = totalConfirmed - totalDeath - totalRecovered;
     totalConfirmedInDoc.innerHTML = totalConfirmed + `<span class="change"> (${totalConfirmed - totalConfirmedChange}+)</span>`;
     totalDeathsInDoc.innerHTML = totalDeath + `<span class="change"> (${totalDeath - totalDeathChange}+)</span>`;
@@ -100,16 +101,22 @@ fetchData()
 //---------MultiLine Graph------------------------/////////////
 const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
     var LineGraphParent = document.getElementById('worldMultilineChart').parentElement;
-    const margin = { left: 60, top: 30, right: 45, bottom: 20 }
+    const margin = { left: 60, top: 30, right: 45, bottom: 20 };
+    countries.forEach(country => {
+        const option = document.createElement("option");
+        option.value = country[0];
+        option.innerHTML = country[0];
+        countrySelection.appendChild(option);
+    })
     const svg = d3.select('#worldMultilineChart')
         .attr('width', LineGraphParent.offsetWidth)
-        .attr('height', LineGraphParent.offsetWidth * .4)
+        .attr('height', LineGraphParent.offsetWidth * .4 + 20)
 
     const g = svg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`)
 
     //sorting country according to confirmed cases
-    const sortBy = document.getElementById("sortBy").value;
+    const sortBy = document.getElementById("sortBy");
 
     const fromDayInRange = document.getElementById('fromDayInRange');
     fromDayInRange.max = days;
@@ -117,9 +124,9 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
     document.getElementById('toDay').innerHTML = days;
 
     var fromDay = fromDayInRange.value;
-        countries.sort((a, b) => {
-            return b[1][fromDay][sortBy] - a[1][fromDay][sortBy];
-        })
+    countries.sort((a, b) => {
+        return b[1][fromDay][sortBy.value] - a[1][fromDay][sortBy.value];
+    })
 
     //Graph from day X to till date
     const newData = [];
@@ -135,18 +142,30 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         newData.push(set);
     })
 
-    const topX = [];
+    var topX = [];
     var numberOfCountriesInLineChart = document.getElementById('numberOfCountriesInLineChart').value;
     for (let i = 0; i < numberOfCountriesInLineChart; i++) {
         topX.push(newData[i]);
     }
-    
+
+    if (countrySelection.value !== "select--") {
+        topX = [];
+        newData.forEach((country, index) => {
+            if (country[0] === countrySelection.value)
+                topX.push(newData[index]);
+        });
+        document.getElementById("controlDisplay").style.display = "none";
+    }
+    else {
+        document.getElementById("controlDisplay").style.display = "inline";
+    }
     var maxYValue = 0;
     topX.forEach(country => {
         country[1].forEach(day => {
             maxYValue = maxYValue < day.confirmed ? day.confirmed : maxYValue;
         })
     })
+    //console.log("topX", topX, "newdata", newData)
     //console.log(maxYValue, topX)
 
     const yScale = d3.scaleLinear()
@@ -165,7 +184,7 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         .curve(d3.curveMonotoneX)
         .x(d => xScale(d.date))
         .y(d => yScale(d.confirmed));
-    
+
     const xScale = d3.scaleTime()
         .domain(d3.extent(newData[0][1], d => d.date))
         .range([0, LineGraphParent.offsetWidth - 80])
@@ -173,7 +192,7 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
     const xTicks = 10;
     const xAxis = d3.axisBottom(xScale)
         .ticks(xTicks)
-        .tickSize(-LineGraphParent.offsetHeight+102);
+        .tickSize(-LineGraphParent.offsetHeight + 102);
     svg.selectAll('.xaxis').remove();
     g.append('g')
         .call(xAxis)
@@ -198,8 +217,8 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         .style("fill", d => lineColor(d[0]))
         .text(d => d[0])
         .style("font-weight", 600)
-        .attr('x', d => xScale(d[1][days - 1 - fromDay].date))
-        .attr('y', d => yScale(d[1][days - 1 - fromDay].confirmed))
+        .attr('x', d => xScale(d[1][days - 1 - fromDay].date) - 80)
+        .attr('y', d => yScale(d[1][days - 1 - fromDay].confirmed) - 2)
         .attr('class', 'line-graph-country-legend')
 
     svg.selectAll('.legend-circle').remove();
@@ -216,10 +235,11 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         .attr("r", 1.5)
         .attr("cx", d => xScale(d.date))
         .attr("cy", d => yScale(d.confirmed))
-        .on('mouseover', d => {
+        .on('mouseover', function (d) {
+            div.style("display", "block")
             div.transition()
                 .duration(200)
-                .style('opacity', 0.8);
+                .style("opacity", 0.8);
             div.html(
                 `<span style="font-size:16px"><b>Confirmed</b>: ${d.confirmed}</span>
                 <br/>
@@ -227,10 +247,12 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
                 <br/>
                 <span style="color:black"><b>Date</b>: ${(d.date).toString().substring(0, 16)}</span>`
             )
-            .style('left', d3.event.pageX + 'px')
-            .style('top', d3.event.pageY - 28 + 'px');
+                .style('left', d3.event.pageX + 10 + 'px')
+                .style('top', d3.event.pageY - 28 + 'px');
+            this.attributes[0].value = 3;
+            console.log(this)
         })
-        .on("mouseout", function (d) { div.style("opacity", 0) })
+        .on("mouseout", function (d) { div.style("display", "none"); this.attributes[0].value = 1.5; })
 
 }
 
