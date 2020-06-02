@@ -79,13 +79,13 @@
                     <div class="controls">
                         <label for="countrySelection">Country:</label>
                         <select name="countrySelection" id="countrySelection"
-                            onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)" name="countries[]">
+                            onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
                             <option value="select--">select--</option>
                         </select>
                         <div id="controlDisplay">
                             <span>Top</span>
                             <input type="number" id="numberOfCountriesInLineChart" name="numberOfCountriesInLineChart"
-                                value="1" min="1"
+                                value="5" min="1"
                                 onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
                             <span>Countries sorted by total</span>
                             <select name="sort" id="sortBy"
