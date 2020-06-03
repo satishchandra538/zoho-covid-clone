@@ -10,10 +10,6 @@ const totalDeathRateInDoc = document.getElementById("deathRate");
 const totalRecoveryRateInDoc = document.getElementById("recoveryRate");
 const worldTable = document.getElementById("worldTable");
 
-// $(document).ready(function () {
-//     $('#countrySelection').select2();
-// });
-
 countries = {};
 window.days = 0;
 //Tool tip div element

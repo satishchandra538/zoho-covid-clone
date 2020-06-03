@@ -5,5 +5,6 @@ module.exports = {
         path: __dirname + '/dist',
         filename: 'bundle.js'
     },
+    devtool: "#eval-source-map",
     watch: true
 }

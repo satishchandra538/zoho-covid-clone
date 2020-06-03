@@ -47,12 +47,23 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         topX.push(newData[i]);
     }
 
-    if (countrySelection.value !== "select--") {
+    $("#countrySelection").select2({
+        placeholder: "Select a country",
+        allowClear: true
+    });
+    const select2List = document.getElementById("select2-countrySelection-container");
+    if (select2List.childElementCount) {
         topX = [];
-        newData.forEach((country, index) => {
-            if (country[0] === countrySelection.value)
-                topX.push(newData[index]);
-        });
+        //select2List.children.style.color = 'black';
+        const select2Values = select2List.innerText.split("×");
+        select2Values.shift();
+        for(let i=0;i<select2Values.length;i++){
+            newData.forEach(country=>{
+                if(country[0]===select2Values[i]){
+                    topX.push(country);
+                }
+            })
+        }
         document.getElementById("controlDisplay").style.display = "none";
     }
     else {
