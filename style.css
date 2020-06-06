@@ -57,7 +57,12 @@ body {
     height: 1.5rem;
     border-radius: 0.2rem;
 }
-
+.select2-container{
+    color:black;
+}
+.select2-container--default .select2-search--inline .select2-search__field{
+    color:gray
+}
 .country-selection select option {
     font-size: 0.9rem;
 }
