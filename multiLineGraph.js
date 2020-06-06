@@ -72,11 +72,9 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
     var maxYValue = 0;
     topX.forEach(country => {
         country[1].forEach(day => {
-            maxYValue = maxYValue < day.confirmed ? day.confirmed : maxYValue;
+            maxYValue = maxYValue < day[sortBy.value] ? day[sortBy.value] : maxYValue;
         })
     })
-    //console.log("topX", topX, "newdata", newData)
-    //console.log(maxYValue, topX)
 
     const yScale = d3.scaleLinear()
         .domain([maxYValue, 0])
@@ -93,7 +91,7 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
     const line = d3.line()
         .curve(d3.curveMonotoneX)
         .x(d => xScale(d.date))
-        .y(d => yScale(d.confirmed));
+        .y(d => yScale(d[sortBy.value]));
 
     const xScale = d3.scaleTime()
         .domain(d3.extent(newData[0][1], d => d.date))
@@ -128,7 +126,7 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         .text(d => d[0])
         .style("font-weight", 600)
         .attr('x', d => xScale(d[1][days - 1 - fromDay].date) - 80)
-        .attr('y', d => yScale(d[1][days - 1 - fromDay].confirmed) - 2)
+        .attr('y', d => yScale(d[1][days - 1 - fromDay][sortBy.value]) - 2)
         .attr('class', 'line-graph-country-legend')
 
     svg.selectAll('.legend-circle').remove();
@@ -144,7 +142,7 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         .append('circle')
         .attr("r", 1.5)
         .attr("cx", d => xScale(d.date))
-        .attr("cy", d => yScale(d.confirmed))
+        .attr("cy", d => yScale(d[sortBy.value]))
         .on('mouseover', function (d) {
             div.style("display", "block")
             div.transition()
