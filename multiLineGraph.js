@@ -42,13 +42,13 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
     })
 
     var topX = [];
-    var numberOfCountriesInLineChart = document.getElementById('numberOfCountriesInLineChart').value;
+    var numberOfCountriesInLineChart = 5;//document.getElementById('numberOfCountriesInLineChart').value;
     for (let i = 0; i < numberOfCountriesInLineChart; i++) {
         topX.push(newData[i]);
     }
 
     $("#countrySelection").select2({
-        placeholder: "Select a country",
+        placeholder: "Select countries",
         allowClear: true
     });
     const select2List = document.getElementById("select2-countrySelection-container");
@@ -64,7 +64,7 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
                 }
             })
         }
-        document.getElementById("controlDisplay").style.display = "none";
+        // document.getElementById("controlDisplay").style.display = "none";
     }
     else {
         document.getElementById("controlDisplay").style.display = "inline";

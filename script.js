@@ -17,7 +17,6 @@ div = d3
     .select('body')
     .append('div')
     .attr('class', 'tooltip')
-const numberOfCountriesInLineChart = 1;
 
 const fetchData = async () => {
     const data = await fetch('https://pomber.github.io/covid19/timeseries.json');
