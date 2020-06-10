@@ -53,6 +53,9 @@ const fetchData = async () => {
         totalDeath += country[1][days - 1].deaths;
         totalDeathChange += country[1][days - 2].deaths;
         countryWithHighestDeathRate = countryWithHighestDeathRate > (country[1][days - 2].deaths / country[1][days - 2].confirmed) * 100 ? countryWithHighestDeathRate : (country[1][days - 2].deaths / country[1][days - 2].confirmed) * 100;
+        if (country[0] === "US") {
+            country[0] = "United State of America";
+        }
     })
 
     let totalActive = totalConfirmed - totalDeath - totalRecovered;

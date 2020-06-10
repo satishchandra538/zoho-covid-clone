@@ -57,12 +57,21 @@ body {
     height: 1.5rem;
     border-radius: 0.2rem;
 }
-.select2-container{
-    color:black;
+
+.select2-container {
+    color: black;
+    text-align: left;
 }
-.select2-container--default .select2-search--inline .select2-search__field{
-    color:gray
+
+/* Change width of country selection space */
+.select2-container--default .select2-selection--multiple {
+    width: 100%;
 }
+
+.select2-container--default .select2-search--inline .select2-search__field {
+    color: gray
+}
+
 .country-selection select option {
     font-size: 0.9rem;
 }
@@ -148,6 +157,7 @@ body {
     width: 100%;
     padding: 0.5rem;
     border-radius: 0.5rem 0.5rem 0 0;
+    text-align: center;
 }
 
 /* world map data */
@@ -158,11 +168,9 @@ body {
 .world-data {
     display: flex;
     flex-direction: column;
-    align-items: center;
     font-size: 1rem;
     border-radius: 0.5rem;
     border: 0.4px solid steelblue;
-    text-align: center;
     padding: 0;
 }
 
@@ -193,15 +201,57 @@ body {
 
 .controls {
     color: #F44336;
+    font-size: 0.9rem;
     font-weight: 600;
     margin: 0.15rem 0 0 0.1rem;
-    float: left;
+    display: inline
 }
 
-.controls select {
+#sortBy {
+    width: 140px;
+    height: 35px;
+    padding: 4px;
+    border-radius: 4px;
+    box-shadow: 2px 2px 8px #999;
+    background: #eee;
     border: none;
-    background-color: #f39c12;
-    color: white
+    outline: none;
+    display: inline-block;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: #F44336;
+}
+
+label {
+    position: relative;
+}
+
+label:after {
+    content: '<>';
+    font: 15px "Consolas", monospace;
+    color: #666;
+    transform: rotate(90deg);
+    right: 8px;
+    top: 0.2rem;
+    padding: 0 0 2px;
+    border-bottom: 1px solid #ddd;
+    position: absolute;
+    pointer-events: none;
+}
+
+label:before {
+    content: '';
+    right: 6px;
+    top: 0.2rem;
+    width: 20px;
+    height: inherit;
+    background: #eee;
+    position: absolute;
+    pointer-events: none;
+    display: block;
 }
 
 .controls input {

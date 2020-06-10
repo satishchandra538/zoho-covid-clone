@@ -42,7 +42,7 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
     })
 
     var topX = [];
-    var numberOfCountriesInLineChart = 5;//document.getElementById('numberOfCountriesInLineChart').value;
+    var numberOfCountriesInLineChart = 5;
     for (let i = 0; i < numberOfCountriesInLineChart; i++) {
         topX.push(newData[i]);
     }
@@ -57,17 +57,13 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
         //select2List.children.style.color = 'black';
         const select2Values = select2List.innerText.split("×");
         select2Values.shift();
-        for(let i=0;i<select2Values.length;i++){
-            newData.forEach(country=>{
-                if(country[0]===select2Values[i]){
+        for (let i = 0; i < select2Values.length; i++) {
+            newData.forEach(country => {
+                if (country[0] === select2Values[i]) {
                     topX.push(country);
                 }
             })
         }
-        // document.getElementById("controlDisplay").style.display = "none";
-    }
-    else {
-        document.getElementById("controlDisplay").style.display = "inline";
     }
     var maxYValue = 0;
     topX.forEach(country => {
@@ -158,7 +154,6 @@ const multiLineGraph = (countries, days, numberOfCountriesInLineChart) => {
                 .style('left', d3.event.pageX + 10 + 'px')
                 .style('top', d3.event.pageY - 28 + 'px');
             this.attributes[0].value = 3;
-            // console.log(this)
         })
         .on("mouseout", function (d) { div.style("display", "none"); this.attributes[0].value = 1.5; })
 

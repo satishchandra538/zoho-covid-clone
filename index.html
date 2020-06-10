@@ -69,23 +69,20 @@
                 <div class="world-data" id="world-map">
                     <span class="title primary-bg">New Cases in countries</span>
                     <div class="controls">
-                        <label for="countrySelection">Country:</label>
+                        Country:
                         <select name="countrySelection" id="countrySelection" multiple="multiple"
                             onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
                         </select>
-                        <div id="controlDisplay">
-                            <!-- <span>Top</span> -->
-                            <input style="display: none;" type="number" id="numberOfCountriesInLineChart" name="numberOfCountriesInLineChart"
-                                value="5" min="1"
-                                onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
-                            <span>Countries data ploted by</span>
-                            <select name="sort" id="sortBy"
-                                onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
+                        <input style="display: none;" type="number" id="numberOfCountriesInLineChart" name="numberOfCountriesInLineChart"
+                            value="5" min="1" onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
+                        <span>Countries data ploted by</span>
+                        <label for="sortBy">
+                            <select name="sort" id="sortBy" onchange="multiLineGraph(countries, days,numberOfCountriesInLineChart)">
                                 <option value="confirmed" selected>Confirmed</option>
                                 <option value="deaths">Deaths</option>
                                 <option value="recovered">Recovered</option>
                             </select>
-                        </div>
+                        </label>
                         cases on day
                         <span id="fromDay"></span>
                         <input type="range" value="50" min="1" id="fromDayInRange"
