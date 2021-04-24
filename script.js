@@ -82,7 +82,7 @@ const fetchData = async () => {
         let TDdeathrate = document.createElement("td");
         let countryDeathRate = ((country[1][days - 1].deaths * 100) / country[1][days - 1].confirmed).toFixed(1);
         if (countryDeathRate < 10) {
-            countryDeathRate = "<span style="color:rgba(0 , 0, 0, 0)>. </span>" + countryDeathRate;
+            countryDeathRate = "<span style='color:rgba(0 , 0, 0, 0)'>. </span>" + countryDeathRate;
         }
         let barWidth = (((country[1][days - 1].deaths / country[1][days - 1].confirmed) * 100) / countryWithHighestDeathRate) * 150;
         let deathRateBar = `<svg width="100" height="20">
